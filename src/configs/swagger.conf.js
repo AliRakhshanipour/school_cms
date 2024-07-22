@@ -1,6 +1,14 @@
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 
+import path from "path"
+import { fileURLToPath } from 'url';
+
+// Determine directory name for serving static files
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+
 // Array of API paths to include in the Swagger documentation
 const apiPaths = [
     '../controllers/**/*.swagger.js', // Adjust paths
@@ -39,6 +47,11 @@ const setupSwagger = (app) => {
     // Serve Swagger JSON
     app.get('/swagger.json', (req, res) => {
         res.json(swaggerSpec);
+    });
+
+    // Serve ReDoc documentation
+    app.get('/redoc', (req, res) => {
+        res.sendFile(path.join(__dirname, 'redoc.html')); // Ensure absolute path is used
     });
 };
 
