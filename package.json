@@ -1,0 +1,31 @@
+{
+  "name": "school_cms",
+  "version": "1.0.0",
+  "description": "school cms developed by express.js , postgersql, passport authentication",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon node app.js"
+  },
+  "keywords": [
+    "nodejs",
+    "expressjs",
+    "sequelize"
+  ],
+  "author": "alirakhshanipour",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "glob": "^11.0.0",
+    "pg": "^8.12.0",
+    "pg-hstore": "^2.3.4",
+    "rimraf": "^6.0.1",
+    "sequelize": "^6.37.3"
+  },
+  "type": "module",
+  "devDependencies": {
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.4"
+  }
+}
