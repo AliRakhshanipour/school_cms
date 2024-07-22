@@ -1,4 +1,4 @@
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes, Model, Op } from 'sequelize';
 import bcrypt from 'bcrypt';
 
 const SALT_ROUNDS = 10; // Number of rounds for hashing

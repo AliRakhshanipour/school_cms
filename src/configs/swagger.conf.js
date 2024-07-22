@@ -11,8 +11,8 @@ const __dirname = path.dirname(__filename);
 
 // Array of API paths to include in the Swagger documentation
 const apiPaths = [
-    '../controllers/**/*.swagger.js', // Adjust paths
-    '../services/**/*.swagger.js', // Adjust paths
+    path.join(__dirname, "..", "controllers", "**", "*.swagger.js"), // Adjust paths
+    path.join(__dirname, "..", "services", "**", "*.swagger.js"), // Adjust paths
 ];
 
 // Swagger definition

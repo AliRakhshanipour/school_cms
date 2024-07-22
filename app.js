@@ -22,6 +22,7 @@ import { middlewares } from "./src/middlewares/main.middleware.js";
 import { ErrorHandlers } from "./src/error/error.handlers.js";
 import { setupSwagger } from "./src/configs/swagger.conf.js";
 import { dbSyncronize } from "./src/models/index.js";
+import mainRoutes from "./src/routes/index.js"
 
 /**
  * Main function that initializes and starts the Express server.
@@ -44,6 +45,7 @@ const main = async () => {
     // Apply middlewares
     // `middlewares` is an array of middleware functions applied to the Express app
     app.use(...middlewares);
+    app.use("/", mainRoutes)
 
     // Setup Swagger for API documentation
     setupSwagger(app);
