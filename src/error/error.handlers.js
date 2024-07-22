@@ -1,5 +1,5 @@
 import { request, response } from 'express';
-import { Error_Msg } from './error.messages.js';
+import { Error_Msg } from '../utils/error.messages.js';
 
 // 404 Error Handler
 const notFoundHandler = (req = request, res = response, next) => {

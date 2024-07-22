@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ReDoc</title>
+    <!-- ReDoc JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"></script>
+</head>
+<body>
+    <redoc spec-url="/swagger.json"></redoc>
+    <script>
+        Redoc.init('/swagger.json', {
+            theme: {
+                colors: {
+                    primary: {
+                        main: '#2E86C1' // Customize theme if needed
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
