@@ -4,6 +4,8 @@ import _ from 'lodash';
 import { StatusCodes } from 'http-status-codes';
 import { UserMsg } from './user.messages.js';
 import createHttpError from 'http-errors';
+import autoBind from 'auto-bind';
+import { Op } from 'sequelize';
 
 /**
  * @module UserController
@@ -18,6 +20,7 @@ export const UserController = (() => {
          * @constructor
          */
         constructor() {
+            autoBind(this)
             this.#model = models.User;
         }
 
@@ -39,7 +42,7 @@ export const UserController = (() => {
                 const userData = _.omitBy({ username, email, phone, password }, _.isNil);
 
                 // Use the custom createUser method to handle user creation
-                const user = await this.#model.createUser(userData);
+                await this.#model.create(userData);
 
                 // Respond with the created user information
                 res.status(StatusCodes.CREATED).json({
@@ -70,7 +73,7 @@ export const UserController = (() => {
                 // Fetch the user by primary key
                 const user = await this.#model.findByPk(userId, {
                     attributes: {
-                        exclude: ["createdAt", "updatedAt"]
+                        exclude: ["password", "createdAt", "updatedAt"]
                     }
                 });
 
@@ -115,7 +118,7 @@ export const UserController = (() => {
 
                 const options = {
                     attributes: {
-                        exclude: ["createdAt", "updatedAt"]
+                        exclude: ["password", "createdAt", "updatedAt"]
                     },
                     limit: parseInt(limit, 10),
                     offset: parseInt(offset, 10),
@@ -135,7 +138,6 @@ export const UserController = (() => {
             }
         }
 
-
         /**
          * Updates an existing user.
          * 
@@ -148,7 +150,7 @@ export const UserController = (() => {
         async update(req = request, res = response, next) {
             try {
                 const { id: userId } = req.params;
-                const userData = _.omitBy(req.body, _.isNil);
+                const userData = _.omitBy(req.body, value => _.isNil(value) || value === '');
 
                 const user = await this.#model.findByPk(userId);
 
@@ -156,11 +158,19 @@ export const UserController = (() => {
                     throw new createHttpError.NotFound(UserMsg().NOT_FOUND);
                 }
 
+                const updatedFields = {};
+                for (const key of Object.keys(userData)) {
+                    if (user[key] !== userData[key]) {
+                        updatedFields[key] = `Updated ${key} to ${userData[key]}`;
+                    }
+                }
+
                 await user.update(userData);
 
                 res.status(StatusCodes.OK).json({
                     success: true,
                     message: UserMsg(user.username).UPDATED,
+                    updatedFields: updatedFields,
                     user: _.omit(user.dataValues, ['password', 'createdAt', 'updatedAt'])
                 });
             } catch (error) {

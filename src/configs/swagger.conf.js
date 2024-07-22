@@ -1,6 +1,5 @@
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
-
 import path from "path"
 import { fileURLToPath } from 'url';
 
@@ -25,7 +24,7 @@ const swaggerDefinition = {
     },
     servers: [
         {
-            url: `http://localhost:${process.env.PORT || 3000}/api`,
+            url: `http://localhost:${process.env.PORT || 3000}`,
             description: 'Development server',
         },
     ],

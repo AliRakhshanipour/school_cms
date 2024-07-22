@@ -3,32 +3,16 @@ import bcrypt from 'bcrypt';
 
 const SALT_ROUNDS = 10; // Number of rounds for hashing
 
+// Define the valid roles as a constant array
+const VALID_ROLES = ["admin", "user", "guest"];
+
 class User extends Model {
     static associate(models) {
         User.hasMany(models.Image, {
             foreignKey: "user_id",
             onDelete: "CASCADE",
             onUpdate: "CASCADE",
-        })
-    }
-
-    static async createUser(userData) {
-        // Check if a user with the same username or email already exists
-        const existingUser = await User.findOne({
-            where: {
-                [Op.or]: [
-                    { username: userData.username },
-                    { email: userData.email }
-                ]
-            }
         });
-
-        if (existingUser) {
-            throw new Error('User already exists with the same username or email');
-        }
-
-        // Proceed with creating the new user
-        return User.create(userData);
     }
 
     // Instance method to compare passwords
@@ -39,7 +23,7 @@ class User extends Model {
 
 // Initialize the model with attributes and options
 export const initUser = (sequelize) => {
-    User.init({
+    return User.init({
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
@@ -48,15 +32,42 @@ export const initUser = (sequelize) => {
         username: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true,
+            unique: {
+                args: true,
+                msg: "username already exists"
+            },
+        },
+        email: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: {
+                args: true,
+                msg: "email already exists"
+            },
         },
         phone: {
             type: DataTypes.STRING,
             allowNull: false,
+            unique: {
+                args: true,
+                msg: "phone number already exists"
+            },
         },
         password: {
             type: DataTypes.STRING,
             allowNull: false,
+        },
+        role: {
+            type: DataTypes.ENUM,
+            values: VALID_ROLES,
+            defaultValue: "user",
+            validate: {
+                isIn: [VALID_ROLES],
+            },
+        },
+        isSuperuser: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
         },
     }, {
         sequelize,
@@ -75,6 +86,4 @@ export const initUser = (sequelize) => {
             },
         },
     });
-
-    return User;
 };

@@ -13,6 +13,10 @@ const userRoutes = [
     { method: 'get', path: '/:id', handler: [UserController.get] },
 ];
 
+userRoutes.forEach(route => {
+
+})
+
 registerRoutes(router, userRoutes);
 
 export default router;

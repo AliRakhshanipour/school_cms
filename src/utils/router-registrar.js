@@ -30,6 +30,7 @@
  */
 export const registerRoutes = (router, routes) => {
     routes.forEach(route => {
-        router[route.method](route.path, ...route.handler);
+        const { method, path, handler } = route;
+        router[method](path, ...handler);
     });
 };

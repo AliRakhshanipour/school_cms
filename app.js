@@ -1,28 +1,11 @@
-/**
- * Entry point of the application.
- * 
- * This module initializes and starts the Express server, sets up middleware, 
- * configures Swagger for API documentation, synchronizes the database, 
- * and applies error handlers.
- * 
- * @module
- * @requires express
- * @requires ./src/configs/server.conf.js
- * @requires ./src/configs/dotenv-config.js
- * @requires ./src/middlewares/main.middleware.js
- * @requires ./src/error/error.handlers.js
- * @requires ./src/configs/swagger.conf.js
- * @requires ./src/models/index.js
- */
-
-import e from "express";
-import Server from "./src/configs/server.conf.js";
-import "./src/configs/dotenv-config.js";
-import { middlewares } from "./src/middlewares/main.middleware.js";
-import { ErrorHandlers } from "./src/error/error.handlers.js";
-import { setupSwagger } from "./src/configs/swagger.conf.js";
-import { dbSyncronize } from "./src/models/index.js";
-import mainRoutes from "./src/routes/index.js"
+import express from 'express';
+import Server from './src/configs/server.conf.js';
+import './src/configs/dotenv-config.js';
+import { middlewares } from './src/middlewares/main.middleware.js';
+import { ErrorHandlers } from './src/error/error.handlers.js';
+import { setupSwagger } from './src/configs/swagger.conf.js';
+import { dbSyncronize } from './src/models/index.js';
+import mainRoutes from './src/routes/index.js';
 
 /**
  * Main function that initializes and starts the Express server.
@@ -39,27 +22,35 @@ import mainRoutes from "./src/routes/index.js"
  * @function
  */
 const main = async () => {
-    // Initialize Express application
-    const app = e();
+    try {
+        // Initialize Express application
+        const app = express(); // Use 'express()' to create an app instance
 
-    // Apply middlewares
-    // `middlewares` is an array of middleware functions applied to the Express app
-    app.use(...middlewares);
-    app.use("/", mainRoutes)
+        // Apply middlewares
+        // Ensure middlewares are correctly defined
+        app.use(...middlewares);
 
-    // Setup Swagger for API documentation
-    setupSwagger(app);
+        // Setup Swagger for API documentation
+        setupSwagger(app);
 
-    // Synchronize the database
-    await dbSyncronize();
+        // Use main routes
+        app.use('/', mainRoutes);
 
-    // Apply error handlers
-    // `ErrorHandlers` is an array of error handling middleware functions
-    app.use(...ErrorHandlers);
+        // Synchronize the database
+        await dbSyncronize();
 
-    // Start the server
-    const port = process.env.PORT || 3000;
-    new Server(port, app).start();
+        // Apply error handlers
+        // Ensure error handlers are correctly defined
+        app.use(...ErrorHandlers);
+
+        // Start the server
+        const port = process.env.PORT || 3000;
+        new Server(port, app).start();
+
+    } catch (error) {
+        console.error('Failed to start the server:', error);
+        process.exit(1); // Exit the process with failure code
+    }
 };
 
 // Run the main function to start the application
