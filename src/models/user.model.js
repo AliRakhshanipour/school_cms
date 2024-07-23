@@ -60,7 +60,7 @@ export const initUser = (sequelize) => {
         role: {
             type: DataTypes.ENUM,
             values: VALID_ROLES,
-            defaultValue: "user",
+            defaultValue: "guest",
             validate: {
                 isIn: [VALID_ROLES],
             },
@@ -68,6 +68,14 @@ export const initUser = (sequelize) => {
         isSuperuser: {
             type: DataTypes.BOOLEAN,
             defaultValue: false,
+        },
+        otp: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        otpExpiry: {
+            type: DataTypes.DATE,
+            allowNull: true,
         },
     }, {
         sequelize,
