@@ -3,6 +3,7 @@ import { registerRoutes } from '../utils/router-registrar.js';
 import { UserController } from '../controllers/user/user.controller.js';
 import { UserService } from '../services/user/user.service.js';
 import { AuthorizeMiddleware } from '../middlewares/auth/auth.middlewares.js';
+import profileUploader from "../utils/multer.js"
 const router = Router();
 
 const {
@@ -26,6 +27,8 @@ const userRoutes = [
     { method: 'delete', path: '/:id/delete', handler: [isAuthenticated, ensureRoles(["admin"]), UserController.delete] },
     { method: 'get', path: '/:id', handler: [isAuthenticated, ensureRoles(["admin"]), UserController.get] },
     { method: 'patch', path: '/:id/change-role', handler: [isAuthenticated, ensureRolesOrSuperuser(), UserService.changeUserRole] },
+    { method: 'post', path: '/upload-profile-picture', handler: [isAuthenticated, profileUploader.single('profilePicture'), UserService.updateProfilePicture] },
+
 ];
 
 /**

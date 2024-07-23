@@ -10,6 +10,8 @@ export const UserMsg = (username) => {
         },
         INVALID_ROLE: (role) => {
             return `Invalid role: ${role} provided or missing parameters`
-        }
+        },
+        NO_FILE_UPLOADED: 'No file was uploaded.',
+        PROFILE_PICTURE_UPDATED: 'Profile picture updated successfully.',
     })
 }

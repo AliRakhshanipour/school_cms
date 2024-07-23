@@ -8,10 +8,13 @@ const VALID_ROLES = ["admin", "user", "guest"];
 
 class User extends Model {
     static associate(models) {
-        User.hasMany(models.Image, {
-            foreignKey: "user_id",
-            onDelete: "CASCADE",
-            onUpdate: "CASCADE",
+        User.hasOne(models.Image, {
+            foreignKey: 'imageableId',
+            as: 'profilePicture',
+            constraints: false,
+            scope: {
+                imageableType: 'user'
+            }
         });
     }
 

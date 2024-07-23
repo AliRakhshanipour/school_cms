@@ -592,3 +592,93 @@
  *                   type: string
  *                   example: 'An unexpected error occurred'
  */
+
+/**
+ * @swagger
+ * /users/upload-profile-picture:
+ *   post:
+ *     summary: Upload Profile Picture
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               profilePicture:
+ *                 type: string
+ *                 format: binary
+ *                 description: The profile picture file to upload.
+ *               uploadType:
+ *                 type: string
+ *                 description: The type of upload, e.g., 'profile'.
+ *                 example: profile
+ *     responses:
+ *       200:
+ *         description: Profile picture uploaded successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Profile picture uploaded successfully.
+ *                 image:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     title:
+ *                       type: string
+ *                     url:
+ *                       type: string
+ *                     imageableId:
+ *                       type: integer
+ *                     imageableType:
+ *                       type: string
+ *                       example: user
+ *       400:
+ *         description: Bad Request - Invalid file or upload type.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 400
+ *                 message:
+ *                   type: string
+ *                   example: Invalid file or upload type.
+ *       401:
+ *         description: Unauthorized - User not authenticated.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 401
+ *                 message:
+ *                   type: string
+ *                   example: User not authenticated.
+ *       404:
+ *         description: Not Found - User not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 404
+ *                 message:
+ *                   type: string
+ *                   example: User not found.
+ */

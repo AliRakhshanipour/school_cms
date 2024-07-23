@@ -7,6 +7,7 @@ import createHttpError from 'http-errors';
 import autoBind from 'auto-bind';
 import { Op } from 'sequelize';
 import logger from "../../services/log/log.module.js"
+import path from "path"
 
 /**
  * @module UserController
@@ -80,7 +81,14 @@ export const UserController = (() => {
                 const user = await this.#model.findByPk(userId, {
                     attributes: {
                         exclude: ["password", "createdAt", "updatedAt"]
-                    }
+                    },
+                    include: [{
+                        model: models.Image,
+                        as: 'profilePicture',
+                        where: { imageableType: 'user' },
+                        attributes: ['url'],
+                        required: false
+                    }]
                 });
 
                 // Check if the user exists
@@ -89,11 +97,16 @@ export const UserController = (() => {
                         user_id: userId
                     })
                     throw new createHttpError.NotFound(UserMsg().NOT_FOUND);
-
                 }
 
-                await this.#logger.logActivity(user.id, UserMsg(username).CREATED, {
-                    user: username
+                // Format the URL to be accessible from the public folder
+                if (user.profilePicture && user.profilePicture.url) {
+                    // Strip '/public' from the URL
+                    user.profilePicture.url = user.profilePicture.url.replace(path.join(process.cwd(), 'public'), '');
+                }
+
+                await this.#logger.logActivity(user.id, UserMsg(user.dataValues.username).FETCHED, {
+                    user: user.dataValues.username
                 })
                 // Respond with the user data
                 res.status(StatusCodes.OK).json({
@@ -106,6 +119,7 @@ export const UserController = (() => {
                 next(error);
             }
         }
+
 
         /**
          * Fetches all users with optional pagination and filtering.
@@ -135,10 +149,24 @@ export const UserController = (() => {
                     },
                     limit: parseInt(limit, 10),
                     offset: parseInt(offset, 10),
-                    where: whereClause
+                    where: whereClause,
+                    include: [{
+                        model: models.Image,
+                        as: 'profilePicture',
+                        where: { imageableType: 'user' },
+                        attributes: ['url'],
+                        required: false
+                    }]
                 };
 
                 const users = await this.#model.findAndCountAll(options);
+
+                // Format the URLs to be accessible from the public folder
+                users.rows.forEach(user => {
+                    if (user.profilePicture && user.profilePicture.url) {
+                        user.profilePicture.url = user.profilePicture.url.replace(path.join(process.cwd(), 'public'), '');
+                    }
+                });
 
                 res.status(StatusCodes.OK).json({
                     success: true,

@@ -3,10 +3,10 @@ import { DataTypes, Model } from "sequelize";
 class Image extends Model {
     static associate(models) {
         Image.belongsTo(models.User, {
-            foreignKey: "user_id",
-            onDelete: "CASCADE",
-            onUpdate: "CASCADE",
-        })
+            foreignKey: 'imageableId',
+            as: 'profilePicture',
+            constraints: false
+        });
     }
 }
 
@@ -15,25 +15,29 @@ export const initImage = (sequelize) => {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
-            autoIncrement: true
+            autoIncrement: true,
         },
         title: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         },
         url: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         },
-        user_id: {
+        imageableId: {
             type: DataTypes.INTEGER,
-            allowNull: true
-        }
+            allowNull: false,
+        },
+        imageableType: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
     }, {
         sequelize,
-        modelName: "Image",
-        tableName: "images"
-    })
+        modelName: 'Image',
+        tableName: 'images',
+    });
 
     return Image;
-}
+};
