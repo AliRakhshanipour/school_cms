@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import userRoutes from './user.routes.js';
 import authRoutes from './auth.routes.js';
+import logRoutes from './log.routes.js';
 
 const router = Router();
 
@@ -19,6 +20,7 @@ const router = Router();
  * @const {Array<{path: string, router: Router}>}
  */
 const mainRoutes = [
+    { path: '/logs', router: logRoutes },
     { path: '/users', router: userRoutes },
     { path: '/auth', router: authRoutes }
 ];

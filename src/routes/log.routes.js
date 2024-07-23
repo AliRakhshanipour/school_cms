@@ -2,13 +2,8 @@ import { Router } from 'express';
 import { registerRoutes } from '../utils/router-registrar.js';
 import { UserController } from '../controllers/user/user.controller.js';
 import { UserService } from '../services/user/user.service.js';
-import { AuthorizeMiddleware } from '../middlewares/auth/auth.middlewares.js';
+import { LogService } from '../services/log/log.service.js';
 const router = Router();
-
-const {
-    isAuthenticated,
-    ensureRoles,
-    ensureRolesOrSuperuser } = AuthorizeMiddleware
 
 /**
  * Array of route configurations for user-related operations.
@@ -20,12 +15,8 @@ const {
  * @property {Array} handler - Array of handler functions for the route.
  */
 const userRoutes = [
-    { method: 'post', path: '/create', handler: [isAuthenticated, ensureRoles(["admin"]), UserController.create] },
-    { method: 'get', path: '/list', handler: [isAuthenticated, ensureRoles(["admin"]), UserController.getUsers] },
-    { method: 'patch', path: '/:id/update', handler: [isAuthenticated, ensureRoles(["admin"]), UserController.update] },
-    { method: 'delete', path: '/:id/delete', handler: [isAuthenticated, ensureRoles(["admin"]), UserController.delete] },
-    { method: 'get', path: '/:id', handler: [isAuthenticated, ensureRoles(["admin"]), UserController.get] },
-    { method: 'patch', path: '/:id/change-role', handler: [isAuthenticated, ensureRolesOrSuperuser(), UserService.changeUserRole] },
+    { method: 'get', path: '/activities', handler: [LogService.getAllActivities] },
+    { method: 'get', path: '/activities/user/:id', handler: [LogService.getActivitiesByUserId] },
 ];
 
 /**

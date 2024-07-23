@@ -15,6 +15,7 @@ export function AuthMsg() {
         LOGGED_OUT: "user logged out successfully",
         USER_EXIST: "username, email, or phone number already exists",
         OTP_EXPIRED: "Invalid or expired OTP",
-        UNAUTHORIZED: "Invalid credentials"
+        UNAUTHORIZED: "Invalid credentials",
+        VERIFIES_TOKEN: "Token verification done",
     });
 }

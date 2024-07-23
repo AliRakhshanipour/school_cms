@@ -6,6 +6,7 @@ import { UserMsg } from './user.messages.js';
 import createHttpError from 'http-errors';
 import autoBind from 'auto-bind';
 import { Op } from 'sequelize';
+import logger from "../../services/log/log.module.js"
 
 /**
  * @module UserController
@@ -14,6 +15,7 @@ import { Op } from 'sequelize';
 export const UserController = (() => {
     class UserController {
         #model;
+        #logger
 
         /**
          * Creates an instance of UserController.
@@ -22,6 +24,7 @@ export const UserController = (() => {
         constructor() {
             autoBind(this)
             this.#model = models.User;
+            this.#logger = logger;
         }
 
         /**
@@ -42,8 +45,11 @@ export const UserController = (() => {
                 const userData = _.omitBy({ username, email, phone, password }, _.isNil);
 
                 // Use the custom createUser method to handle user creation
-                await this.#model.create(userData);
+                const user = await this.#model.create(userData);
 
+                await this.#logger.logActivity(req?.user?.id, UserMsg(username).CREATED, {
+                    user: username
+                })
                 // Respond with the created user information
                 res.status(StatusCodes.CREATED).json({
                     success: true,
@@ -79,9 +85,16 @@ export const UserController = (() => {
 
                 // Check if the user exists
                 if (!user) {
+                    await this.#logger.logActivity(req?.user?.id, `tried to get user with id: ${userId}`, {
+                        user_id: userId
+                    })
                     throw new createHttpError.NotFound(UserMsg().NOT_FOUND);
+
                 }
 
+                await this.#logger.logActivity(user.id, UserMsg(username).CREATED, {
+                    user: username
+                })
                 // Respond with the user data
                 res.status(StatusCodes.OK).json({
                     success: true,

@@ -6,15 +6,18 @@ import { Op } from 'sequelize';
 import { AuthMsg } from "./auth.messages.js";
 import { generateOTP } from "../../utils/otp-generator.js";
 import { generateToken } from "../../utils/token-generator.js";
+import logger from "../log/log.module.js"
 
 
 export const AuthService = (() => {
     class AuthService {
         #model;
+        #logger;
 
         constructor() {
             autoBind(this);
             this.#model = models.User;
+            this.#logger = logger
         }
 
         /**
@@ -49,6 +52,10 @@ export const AuthService = (() => {
 
                 const user = await this.#model.create({ username, email, phone, password, otp, otpExpiry });
 
+                await this.#logger.logActivity(user.id, AuthMsg().REGISTERED, {
+                    user: user.dataValues.username
+                })
+
                 // await sendEmail(email, 'Your OTP Code', `Your OTP code is ${otp}`);
 
                 res.status(StatusCodes.CREATED)
@@ -82,11 +89,19 @@ export const AuthService = (() => {
                     });
                 }
 
+                await this.#logger.logActivity(user.id, AuthMsg().VERIFIES_TOKEN, {
+                    user: user.dataValues.username,
+                    otp: user.otp,
+                    otpExpiry: user.otpExpiry,
+                })
+
                 user.otp = null;
                 user.otpExpiry = null;
                 await user.save();
 
                 const token = generateToken(user);
+
+
 
                 res.status(StatusCodes.OK)
                     .json({
@@ -118,6 +133,9 @@ export const AuthService = (() => {
                             message: AuthMsg().UNAUTHORIZED
                         });
                 }
+                await this.#logger.logActivity(user.id, AuthMsg().LOGGED_IN, {
+                    user: user.dataValues.username
+                })
 
                 const token = generateToken(user);
                 res.status(StatusCodes.OK).json({

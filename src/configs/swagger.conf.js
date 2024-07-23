@@ -11,6 +11,8 @@ const __dirname = path.dirname(__filename);
 const apiPaths = [
     path.join(__dirname, "..", "controllers", "**", "*.swagger.js"), // Paths for controller Swagger comments
     path.join(__dirname, "..", "services", "**", "*.swagger.js"),    // Paths for service Swagger comments
+    path.join(__dirname, "..", "log", "**", "*.swagger.js"),    // Paths for logger Swagger comments
+    path.join(__dirname, "..", "log", "*.swagger.js"),    // Paths for logger Swagger comments
 ];
 
 // Swagger definition

@@ -6,7 +6,8 @@ import { ErrorHandlers } from './src/error/error.handlers.js';
 import { setupSwagger } from './src/configs/swagger.conf.js';
 import { dbSyncronize } from './src/models/index.js';
 import mainRoutes from './src/routes/index.js';
-
+import { connectMongoDB } from './src/configs/database.conf.js';
+import "./src/configs/passport.conf.js"
 /**
  * Main function that initializes and starts the Express server.
  * 
@@ -38,6 +39,7 @@ const main = async () => {
 
         // Synchronize the database
         await dbSyncronize();
+        await connectMongoDB()
 
         // Apply error handlers
         // Ensure error handlers are correctly defined

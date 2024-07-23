@@ -19,6 +19,12 @@ class User extends Model {
     async comparePassword(password) {
         return bcrypt.compare(password, this.password);
     }
+
+
+    // Static method to get ENUM values for role
+    static getRoleEnumValues() {
+        return VALID_ROLES;
+    }
 }
 
 // Initialize the model with attributes and options
@@ -77,6 +83,10 @@ export const initUser = (sequelize) => {
             type: DataTypes.DATE,
             allowNull: true,
         },
+        activity: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        }
     }, {
         sequelize,
         modelName: 'User',

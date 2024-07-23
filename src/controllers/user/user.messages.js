@@ -5,5 +5,11 @@ export const UserMsg = (username) => {
         DELETED: `user : ${username} deleted successfully`,
         FETCHED: `user : ${username} found successfully`,
         NOT_FOUND: `user not found`,
+        ROLE_CHANGED: (role) => {
+            return `user role changed to ${role} successfully`
+        },
+        INVALID_ROLE: (role) => {
+            return `Invalid role: ${role} provided or missing parameters`
+        }
     })
 }
