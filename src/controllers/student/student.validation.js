@@ -43,5 +43,7 @@ export const studentSchema = Joi.object({
     discipline_grade: Joi.string().required().messages({
         'string.empty': 'Discipline grade is required',
         'any.required': 'Discipline grade is required'
-    })
+    }),
+    // Optional profile picture field
+    profilePicture: Joi.any().optional().allow(null)
 });

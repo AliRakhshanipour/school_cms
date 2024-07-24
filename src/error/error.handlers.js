@@ -1,5 +1,5 @@
 import { Error_Msg } from '../utils/error.messages.js';
-import ValidationError from '../utils/customError.js';
+import ValidationError from './custom-error.js';
 
 /**
  * Handles 404 Not Found errors.
