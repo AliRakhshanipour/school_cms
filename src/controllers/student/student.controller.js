@@ -4,6 +4,7 @@ import { request, response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { StudentMsg } from "./student.messages.js";
 import logger from "../../services/log/log.module.js";
+import { Op } from "sequelize";
 
 export const StudentController = (() => {
     /**
@@ -79,12 +80,34 @@ export const StudentController = (() => {
             }
         }
 
+        /**
+         * Retrieves a list of students with optional filters for national code, first name, last name,
+         * and ranges for average grade, math grade, and discipline grade.
+         * 
+         * @async
+         * @param {Object} req - The request object.
+         * @param {Object} res - The response object.
+         * @param {Function} next - The next middleware function.
+         * @returns {Promise<void>}
+         */
         async getStudents(req = request, res = response, next) {
             try {
                 // Extract query parameters
-                const { limit = 10, offset = 0, national_code, first_name, last_name, min_avg_grade, max_avg_grade, min_math_grade, max_math_grade, min_discipline_grade, max_discipline_grade } = req.query;
+                const {
+                    limit = 10,
+                    offset = 0,
+                    national_code,
+                    first_name,
+                    last_name,
+                    min_avg_grade,
+                    max_avg_grade,
+                    min_math_grade,
+                    max_math_grade,
+                    min_discipline_grade,
+                    max_discipline_grade
+                } = req.query;
 
-                // Prepare filters
+                // Prepare filter conditions
                 const whereConditions = {};
 
                 if (national_code) {
@@ -147,7 +170,6 @@ export const StudentController = (() => {
                 next(error);
             }
         }
-
     }
 
     return new StudentController();
