@@ -7,7 +7,15 @@ class Image extends Model {
             as: 'profilePicture',
             constraints: false
         });
+
+        Image.belongsTo(models.Student, {
+            foreignKey: 'imageableId',
+            as: 'studentPicture',
+            constraints: false
+        });
     }
+
+
 }
 
 export const initImage = (sequelize) => {
