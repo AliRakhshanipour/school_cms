@@ -5,4 +5,7 @@ export const StudentMsg = Object.freeze({
     UNIQUE_NATIONAL_CODE: (national_code) => {
         return `this national code: ${national_code} already exists`
     },
+    NOT_FOUND: (id) => {
+        return `not found student: ${id}`
+    }
 })

@@ -1,14 +1,14 @@
 import { sequelize } from "../configs/database.conf.js"
 import setupAssociations from "../utils/associate-models.js"
 import { initImage } from "./image.model.js"
-import { initStudent } from "./student.model.js"
 import { initUser } from "./user.model.js"
+import { initStudent } from "./student.model.js"
 
 // Define and initialize models
 export const models = {
     User: initUser(sequelize), // Initialize the User model with the Sequelize instance
+    Student: initStudent(sequelize), // Initialize the Student model with the Sequelize instance
     Image: initImage(sequelize), // Initialize the Image model with the Sequelize instance
-    Student: initStudent(sequelize) // Initialize the Student model with the Sequelize instance
 }
 
 // Setup model associations

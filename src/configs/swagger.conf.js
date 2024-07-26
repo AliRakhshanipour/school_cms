@@ -53,6 +53,10 @@ const swaggerDefinition = {
             name: 'Users', // Tag for user-related endpoints
             description: 'Endpoints related to user operations' // Description of the Users tag
         },
+        {
+            name: 'Students', // Tag for student-related endpoints
+            description: 'Endpoints related to student operations' // Description of the Students tag
+        },
 
     ],
 };

@@ -3,8 +3,9 @@ import { models } from "../../models/index.js";
 import { request, response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { StudentMsg } from "./student.messages.js";
-import logger from "../../services/log/log.module.js";
 import { Op } from "sequelize";
+import _ from 'lodash';
+
 
 export const StudentController = (() => {
     /**
@@ -13,14 +14,14 @@ export const StudentController = (() => {
     class StudentController {
         #model;
         #imageModel;
-        #logger;
 
         constructor() {
             autoBind(this);
             this.#model = models.Student;
             this.#imageModel = models.Image;
-            this.#logger = logger;
         }
+
+
 
         /**
          * Creates a new student with an optional profile picture.
@@ -31,7 +32,7 @@ export const StudentController = (() => {
          * @param {Function} next - The next middleware function.
          * @returns {Promise<void>}
          */
-        async create(req = request, res = response, next) {
+        async createStudent(req = request, res = response, next) {
             try {
                 // Extract student data from the request body
                 const studentData = req.body;
@@ -170,6 +171,150 @@ export const StudentController = (() => {
                 next(error);
             }
         }
+
+        /**
+         * Retrieves a single student by ID, including an optional profile picture.
+         * 
+         * @async
+         * @param {Object} req - The request object.
+         * @param {Object} res - The response object.
+         * @param {Function} next - The next middleware function.
+         * @returns {Promise<void>}
+         */
+        async getStudent(req = request, res = response, next) {
+            try {
+
+                // Extract student ID from request parameters
+                const { id: studentId } = req.params;
+
+                // Fetch the student by primary key, excluding certain attributes
+                const student = await this.#model.findByPk(studentId, {
+                    attributes: {
+                        exclude: ["createdAt", "updatedAt"]
+                    },
+                    include: [{
+                        model: this.#imageModel,
+                        as: 'studentPicture',
+                        where: { imageableType: 'student' },
+                        attributes: ['url'],
+                        required: false
+                    }]
+                });
+
+                if (!student) {
+                    return res.status(StatusCodes.NOT_FOUND).json({
+                        success: false,
+                        message: StudentMsg.NOT_FOUND(studentId)
+                    })
+                }
+
+                // Respond with the student data
+                res.status(StatusCodes.OK).json({
+                    success: true,
+                    student
+                });
+
+            } catch (error) {
+                // Pass errors to the error-handling middleware
+                next(error);
+            }
+        }
+
+        /**
+         * Updates a student's details and profile picture.
+         * 
+         * @async
+         * @param {Object} req - The request object, including the student ID in the params and the update data in the body.
+         * @param {Object} res - The response object.
+         * @param {Function} next - The next middleware function.
+         * @returns {Promise<void>}
+         */
+        async updateStudent(req = request, res = response, next) {
+            try {
+                const { id: studentId } = req.params;
+
+                const updateData = _.omitBy(req.body, value => _.isNil(value) || value === '');
+
+                // Find the student
+                const student = await this.#model.findOne({
+                    where: { id: studentId }
+                });
+
+                if (!student) {
+                    return res.status(StatusCodes.NOT_FOUND).json({
+                        success: false,
+                        message: `Student with ID ${studentId} not found.`,
+                        errors: [{ message: `Student with ID ${studentId} not found.`, path: ['student_id'] }]
+                    });
+                }
+
+                // Handle profile picture update
+                if (req.file) {
+                    // Delete the current profile picture if it exists
+                    const currentImage = await this.#imageModel.findOne({
+                        where: { imageableId: studentId, imageableType: 'student' }
+                    });
+
+                    if (currentImage) {
+                        // Remove the file from the server
+                        const imagePath = path.join(process.cwd(), 'public', currentImage.url);
+                        fs.unlinkSync(imagePath);
+
+                        // Remove the image record from the database
+                        await currentImage.destroy();
+                    }
+
+                    // Save the new profile picture
+                    const { path: filePath } = req.file;
+                    const newImage = await this.#imageModel.create({
+                        title: `student-pic-${studentId}`,
+                        url: filePath.replace(process.cwd() + '/public', ''),
+                        imageableId: studentId,
+                        imageableType: 'student'
+                    });
+
+                    // Associate the new image with the student
+                    await student.setStudentPicture(newImage);
+                }
+
+                // Update student record
+                await student.update(updateData);
+
+                // Respond with the updated student data
+                res.status(StatusCodes.OK).json({
+                    success: true,
+                    student
+                });
+
+            } catch (error) {
+                next(error);
+            }
+        }
+
+        async deleteStudent(req, res, next) {
+            try {
+                const { id: studentId } = req.params;
+
+                const student = await this.#model.findByPk(studentId);
+
+                if (!student) {
+                return res.status(404).json({
+                    success: false,
+                    message: `Student with ID ${studentId} not found.`,
+                    errors: [{ message: `Student with ID ${studentId} not found.`, path: ['student_id'] }],
+                });
+                }
+
+                await student.destroy();
+
+                return res.status(StatusCodes.NO_CONTENT)
+                    .json({ success: true });
+            } catch (error) {
+                next(error);
+            }
+        }
+
+
     }
 
     return new StudentController();

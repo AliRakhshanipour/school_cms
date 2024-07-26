@@ -29,7 +29,7 @@ class Student extends Model {
  * @returns {Model} - The Student model.
  */
 export const initStudent = (sequelize) => {
-    return Student.init({
+    Student.init({
         /**
          * Unique identifier for the student.
          */
@@ -131,4 +131,6 @@ export const initStudent = (sequelize) => {
          */
         tableName: "students"
     });
+
+    return Student;
 };
