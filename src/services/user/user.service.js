@@ -69,7 +69,7 @@ export const UserService = (() => {
                     await oldImage.destroy();
                 }
 
-                const newImage = await models.Image.create({
+                const newImage = await this.#imageModel.create({
                     title: `profile-pic-${req.user.username}`,
                     url: filePath,
                     imageableId: req.user.id,

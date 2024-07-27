@@ -7,5 +7,8 @@ export const StudentMsg = Object.freeze({
     },
     NOT_FOUND: (id) => {
         return `not found student: ${id}`
+    },
+    NOT_CREATED: () => {
+        return `student not created`
     }
 })

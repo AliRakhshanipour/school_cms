@@ -21,8 +21,6 @@ export const StudentController = (() => {
             this.#imageModel = models.Image;
         }
 
-
-
         /**
          * Creates a new student with an optional profile picture.
          * 
@@ -243,7 +241,7 @@ export const StudentController = (() => {
                 if (!student) {
                     return res.status(StatusCodes.NOT_FOUND).json({
                         success: false,
-                        message: `Student with ID ${studentId} not found.`,
+                        message: StudentMsg.NOT_FOUND(studentId),
                         errors: [{ message: `Student with ID ${studentId} not found.`, path: ['student_id'] }]
                     });
                 }
@@ -291,18 +289,26 @@ export const StudentController = (() => {
             }
         }
 
+        /**
+         * Deletes a student and profile picture.
+         * 
+         * @async
+         * @param {Object} req - The request object, including the student ID in the params.
+         * @param {Object} res - The response object.
+         * @param {Function} next - The next middleware function.
+         * @returns {Promise<void>}
+         */
         async deleteStudent(req, res, next) {
             try {
                 const { id: studentId } = req.params;
-
                 const student = await this.#model.findByPk(studentId);
 
                 if (!student) {
-                return res.status(404).json({
-                    success: false,
-                    message: `Student with ID ${studentId} not found.`,
-                    errors: [{ message: `Student with ID ${studentId} not found.`, path: ['student_id'] }],
-                });
+                    return res.status(404).json({
+                        success: false,
+                        message: StudentMsg.NOT_FOUND(studentId),
+                        errors: [{ message: `Student with ID ${studentId} not found.`, path: ['student_id'] }],
+                    });
                 }
 
                 await student.destroy();

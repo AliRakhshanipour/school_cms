@@ -68,49 +68,38 @@
  *         first_name:
  *           type: string
  *           description: The first name of the student.
- *           example: John
  *         last_name:
  *           type: string
  *           description: The last name of the student.
- *           example: Doe
  *         national_code:
  *           type: string
  *           description: The national code of the student.
- *           example: 1234567890
  *         fatehr_name:
  *           type: string
  *           description: The name of the student's father.
- *           example: Jack
  *         fatehr_job:
  *           type: string
  *           description: The job of the student's father.
- *           example: Engineer
  *         mother_job:
  *           type: string
  *           description: The job of the student's mother.
- *           example: Teacher
  *         father_education:
  *           type: string
  *           description: The education level of the student's father.
  *           enum: ["diplom", "bachelor", "master", "phd", "others"]
- *           example: bachelor
  *         mother_education:
  *           type: string
  *           description: The education level of the student's mother.
  *           enum: ["diplom", "bachelor", "master", "phd", "others"]
- *           example: master
  *         math_grade:
  *           type: string
  *           description: The math grade of the student.
- *           example: A
  *         avg_grade:
  *           type: string
  *           description: The average grade of the student.
- *           example: B+
  *         discipline_grade:
  *           type: string
  *           description: The discipline grade of the student.
- *           example: A-
  *         profilePicture:
  *           type: string
  *           format: binary
@@ -625,25 +614,105 @@
  *                   type: string
  */
 
- /**
+/**
+* @swagger
+* /students/{id}/delete:
+*   delete:
+*     summary: Delete a student by ID
+*     tags: [Students]
+*     parameters:
+*       - in: path
+*         name: id
+*         schema:
+*           type: integer
+*         required: true
+*         description: The user ID
+*         example: 1
+*     responses:
+*       204:
+*         description: Student deleted successfully
+*       404:
+*         description: Student not found
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 status:
+*                   type: integer
+*                   example: 404
+*                 message:
+*                   type: string
+*                   example: Student not found
+*       401:
+*         description: Unauthorized - User is not authenticated.
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 status:
+*                   type: integer
+*                   example: 401
+*                 message:
+*                   type: string
+*                   example: User is not authenticated.
+*       403:
+*         description: Forbidden - User does not have permission to delete this student.
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 status:
+*                   type: integer
+*                   example: 403
+*                 message:
+*                   type: string
+*                   example: Access denied. You do not have permission to delete this Student.
+*       500:
+*         description: Internal server error
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 status:
+*                   type: integer
+*                   example: 500
+*                 message:
+*                   type: string
+*                   example: Internal server error
+*/
+
+
+/**
  * @swagger
- * /students/{id}/delete:
- *   delete:
- *     summary: Delete a student by ID
+ * /students/student-create:
+ *   post:
+ *     summary: Create a new student with signup route
  *     tags: [Students]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: integer
- *         required: true
- *         description: The user ID
- *         example: 1
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateStudentRequest'
  *     responses:
- *       204:
- *         description: Student deleted successfully
- *       404:
- *         description: Student not found
+ *       201:
+ *         description: Student created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 student:
+ *                   $ref: '#/components/schemas/Student'
+ *       400:
+ *         description: Bad request due to validation errors
  *         content:
  *           application/json:
  *             schema:
@@ -651,36 +720,23 @@
  *               properties:
  *                 status:
  *                   type: integer
- *                   example: 404
+ *                   example: 400
  *                 message:
  *                   type: string
- *                   example: Student not found
- *       401:
- *         description: Unauthorized - User is not authenticated.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: integer
- *                   example: 401
- *                 message:
- *                   type: string
- *                   example: User is not authenticated.
- *       403:
- *         description: Forbidden - User does not have permission to delete this student.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: integer
- *                   example: 403
- *                 message:
- *                   type: string
- *                   example: Access denied. You do not have permission to delete this Student.
+ *                   example: Validation Error
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       message:
+ *                         type: string
+ *                         example: "first_name is required"
+ *                       path:
+ *                         type: array
+ *                         items:
+ *                           type: string
+ *                           example: "first_name"
  *       500:
  *         description: Internal server error
  *         content:
@@ -695,3 +751,4 @@
  *                   type: string
  *                   example: Internal server error
  */
+

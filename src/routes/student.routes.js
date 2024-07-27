@@ -58,7 +58,16 @@ const studentRoutes = [
             ensureRoles(["admin"]),
             StudentController.deleteStudent
         ]
-    }
+    },
+    {
+        method: 'post',
+        path: '/student-create',
+        handler: [
+            profileUploader.single('profilePicture'),
+            validateStudent,
+            StudentController.createStudent
+        ]
+    },
 ];
 
 /**
