@@ -13,6 +13,12 @@ class Image extends Model {
             as: 'studentPicture',
             constraints: false
         });
+
+        Image.belongsTo(models.Field, {
+            foreignKey: 'imageableId',
+            as: 'fieldPicture',
+            constraints: false
+        });
     }
 
 
