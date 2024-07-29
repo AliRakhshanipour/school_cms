@@ -257,3 +257,111 @@
  *                   type: string
  *                   example: Internal server error
  */
+
+
+/**
+ * @swagger
+ * /fields/{id}/update:
+ *   patch:
+ *     summary: Update field details
+ *     tags: [Fields]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID of the field to update
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 enum: 
+ *                   - 'برق ساختمان'
+ *                   - 'نصب و تعمیر آسانسور'
+ *                   - 'برق صنعتی'
+ *                   - 'مکانیک خودرو'
+ *                   - 'صنایع چوب و مبلمان'
+ *               short_text:
+ *                 type: string
+ *               grade:
+ *                 type: string
+ *                 enum: 
+ *                   - 'دهم'
+ *                   - 'یازدهم'
+ *                   - 'دوازدهم'
+ *               description:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the field data.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 title:
+ *                   type: string
+ *                   example: عنوان رشته
+ *                 short_text:
+ *                   type: string
+ *                   example: متن کوتاه
+ *                 grade:
+ *                   type: string
+ *                   example: پایه کلاس
+ *                 description:
+ *                   type: string
+ *                   example: توضیحات رشته
+ *       400:
+ *         description: Bad request due to validation errors
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                 message:
+ *                   type: string
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       message:
+ *                         type: string
+ *                       path:
+ *                         type: array
+ *                         items:
+ *                           type: string
+ *       404:
+ *         description: Field not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                 message:
+ *                   type: string
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                 message:
+ *                   type: string
+ */
+
