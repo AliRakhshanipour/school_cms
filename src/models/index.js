@@ -8,14 +8,30 @@ import { initUser } from "./user.model.js"
 
 
 
-// Define and initialize models
+/**
+ * Defines and initializes the database models using Sequelize.
+ * 
+ * @module models
+ * 
+ * @constant {Object} models - An object containing the initialized models.
+ * @property {Object} User - The initialized User model.
+ * @property {Object} Image - The initialized Image model.
+ * @property {Object} Field - The initialized Field model.
+ * @property {Object} Student - The initialized Student model.
+ * 
+ * @example
+ * // Example usage
+ * import { models } from './path/to/models';
+ * 
+ * // Accessing a model
+ * const user = await models.User.findByPk(1);
+ */
 export const models = {
-    User: initUser(sequelize), // Initialize the User model with the Sequelize instance
-    Image: initImage(sequelize), // Initialize the Image model with the Sequelize instance
-    Field: initField(sequelize), // Initialize the Field model with the Sequelize instance
+    User: initUser(sequelize),    // Initialize the User model with the Sequelize instance
+    Image: initImage(sequelize),   // Initialize the Image model with the Sequelize instance
+    Field: initField(sequelize),    // Initialize the Field model with the Sequelize instance
     Student: initStudent(sequelize), // Initialize the Student model with the Sequelize instance
-}
-
+};
 
 
 // Setup model associations

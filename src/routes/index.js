@@ -3,6 +3,7 @@ import userRoutes from './user.routes.js';
 import authRoutes from './auth.routes.js';
 import logRoutes from './log.routes.js';
 import studentRoutes from './student.routes.js';
+import fieldRoutes from './field.routes.js';
 
 const router = Router();
 
@@ -24,7 +25,8 @@ const mainRoutes = [
     { path: '/logs', router: logRoutes },
     { path: '/users', router: userRoutes },
     { path: '/auth', router: authRoutes },
-    { path: '/students', router: studentRoutes }
+    { path: '/students', router: studentRoutes },
+    { path: '/fields', router: fieldRoutes },
 ];
 
 /**

@@ -20,11 +20,7 @@ class Field extends Model {
     }
 }
 
-/**
- * Initialize the Field model with the specified schema.
- * @param {import("sequelize").Sequelize} sequelize - The Sequelize instance to use for defining the model.
- * @returns {Field} The initialized Field model.
- */
+
 export const initField = (sequelize) => {
     Field.init({
         id: {
