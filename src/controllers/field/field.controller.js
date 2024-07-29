@@ -299,6 +299,54 @@ export const FieldController = (() => {
             }
         }
 
+
+        /**
+         * Deletes a field from the database based on the provided field ID.
+         * 
+         * @async
+         * @function deleteField
+         * @param {Object} req - The request object, which contains the field ID in the parameters.
+         * @param {Object} res - The response object, used to send back the desired HTTP response.
+         * @param {Function} next - The next middleware function in the Express.js request-response cycle.
+         * 
+         * @throws {Error} If an error occurs during the database operations, it will be passed to the next middleware.
+         * 
+         * @returns {Promise<void>} Sends a JSON response indicating the success of the deletion or an error message.
+         * 
+         * @example
+         * // Example usage in an Express route
+         * app.delete('/fields/:id', deleteField);
+         */
+        async deleteField(req = request, res = response, next) {
+            try {
+                // Extract the field ID from the request parameters
+                const { id: fieldId } = req.params;
+
+                // Retrieve the existing field from the database
+                const field = await this.#model.findByPk(fieldId);
+
+                // If the field is not found, send a 404 Not Found response
+                if (!field) {
+                    return res.status(StatusCodes.NOT_FOUND).json({
+                        success: false,
+                        message: FieldMsg.NOT_FOUND(fieldId) // Custom message for field not found
+                    });
+                }
+
+                // Delete the field from the database
+                await field.destroy();
+
+                // Send a 204 No Content response indicating successful deletion
+                res.status(StatusCodes.NO_CONTENT).json({
+                    success: true,
+                    message: FieldMsg.DELETED // Custom message indicating successful deletion
+                });
+            } catch (error) {
+                // If an error occurs, pass it to the next middleware for handling
+                next(error);
+            }
+        }
+
     }
     return new FieldController()
 })()

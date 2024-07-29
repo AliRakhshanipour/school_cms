@@ -4,5 +4,8 @@ export const FieldMsg = Object.freeze({
     },
     NOT_FOUND: (fieldId) => {
         return `no field found with this id: ${fieldId}`
+    },
+    DELETED: (fieldId) => {
+        return `field with id: ${fieldId} deleted successfully`
     }
 })
