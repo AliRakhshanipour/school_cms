@@ -6,6 +6,7 @@ import { request, response } from "express"
 import { StatusCodes } from "http-status-codes"
 import { FieldMsg } from "./field.messages.js"
 import { sequelize } from "../../configs/database.conf.js"
+import _ from "lodash"
 
 export const FieldController = (() => {
     class FieldController {
@@ -259,18 +260,10 @@ export const FieldController = (() => {
          * Updates a field in the database based on the provided field ID and data.
          * 
          * @async
-         * @function updateField
-         * @param {Object} req - The request object, which contains the field ID in the parameters and updated data in the body.
-         * @param {Object} res - The response object, used to send back the desired HTTP response.
-         * @param {Function} next - The next middleware function in the Express.js request-response cycle.
-         * 
-         * @throws {Error} If an error occurs during the database operations, it will be passed to the next middleware.
-         * 
-         * @returns {Promise<void>} Sends a JSON response with the updated field data or an error message.
-         * 
-         * @example
-         * // Example usage in an Express route
-         * app.patch('/fields/:id', updateField);
+         * @param {Object} req - The request object, including the field ID in the params and the update data in the body.
+         * @param {Object} res - The response object.
+         * @param {Function} next - The next middleware function.
+         * @returns {Promise<void>}
          */
         async updateField(req = request, res = response, next) {
             try {

@@ -39,6 +39,14 @@ const fieldRoutes = [
         handler: [
             FieldController.getField
         ]
+    },
+    {
+        method: 'patch',
+        path: '/:id/update',
+        handler: [
+            imageUploader.none(),
+            FieldController.updateField
+        ]
     }
 ];
 
