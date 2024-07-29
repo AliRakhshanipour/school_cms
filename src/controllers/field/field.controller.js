@@ -9,18 +9,7 @@ import { sequelize } from "../../configs/database.conf.js"
 
 export const FieldController = (() => {
     class FieldController {
-        /**
-         * Private property that holds the Field model.
-         * @private
-         * @type {Object}
-         */
         #model;
-
-        /**
-         * Private property that holds the Image model.
-         * @private
-         * @type {Object}
-         */
         #imageModel;
 
         /**
@@ -258,6 +247,58 @@ export const FieldController = (() => {
                 res.status(StatusCodes.OK).json({
                     success: true,
                     field // Return the found field
+                });
+            } catch (error) {
+                // If an error occurs, pass it to the next middleware for handling
+                next(error);
+            }
+        }
+
+
+        /**
+         * Updates a field in the database based on the provided field ID and data.
+         * 
+         * @async
+         * @function updateField
+         * @param {Object} req - The request object, which contains the field ID in the parameters and updated data in the body.
+         * @param {Object} res - The response object, used to send back the desired HTTP response.
+         * @param {Function} next - The next middleware function in the Express.js request-response cycle.
+         * 
+         * @throws {Error} If an error occurs during the database operations, it will be passed to the next middleware.
+         * 
+         * @returns {Promise<void>} Sends a JSON response with the updated field data or an error message.
+         * 
+         * @example
+         * // Example usage in an Express route
+         * app.patch('/fields/:id', updateField);
+         */
+        async updateField(req = request, res = response, next) {
+            try {
+                // Extract the field ID from the request parameters
+                const { id: fieldId } = req.params;
+
+                // Prepare the updated field data, omitting any null or empty values
+                const fieldUpdatedData = _.omitBy(req.body, value => _.isNil(value) || value === '');
+
+                // Retrieve the existing field from the database
+                const field = await this.#model.findByPk(fieldId);
+
+                // If the field is not found, send a 404 Not Found response
+                if (!field) {
+                    return res.status(StatusCodes.NOT_FOUND).json({
+                        success: false,
+                        message: FieldMsg.NOT_FOUND(fieldId) // Custom message for field not found
+                    });
+                }
+
+                // Update the field with the new data
+                await field.update(fieldUpdatedData);
+                await field.save(); // Save the changes to the database
+
+                // Send a 200 OK response with the updated field data
+                res.status(StatusCodes.OK).json({
+                    success: true,
+                    field // Return the updated field
                 });
             } catch (error) {
                 // If an error occurs, pass it to the next middleware for handling
