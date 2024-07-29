@@ -61,6 +61,10 @@ const swaggerDefinition = {
             name: 'Fields', // Tag for field-related endpoints
             description: 'Endpoints related to field operations' // Description of the Fields tag
         },
+        {
+            name: 'Teachers', // Tag for teacher-related endpoints
+            description: 'Endpoints related to teacher operations' // Description of the Teachers tag
+        },
 
     ],
 };

@@ -14,6 +14,11 @@ class Student extends Model {
                 imageableType: 'student'
             }
         });
+
+        Student.belongsTo(models.Class, {
+            foreignKey: 'classId',
+            onDelete: 'CASCADE',
+        })
     }
 }
 
@@ -68,6 +73,10 @@ export const initStudent = (sequelize) => {
         },
         discipline_grade: {
             type: DataTypes.STRING,
+            allowNull: false
+        },
+        classId: {
+            type: DataTypes.INTEGER,
             allowNull: false
         }
     }, {

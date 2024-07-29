@@ -17,6 +17,11 @@ class Field extends Model {
                 imageableType: 'field'
             }
         });
+
+        Field.belongsTo(models.Class, {
+            foreignKey: "fieldId",
+            onDelete: "CASCADE",
+        })
     }
 }
 
@@ -45,6 +50,10 @@ export const initField = (sequelize) => {
         },
         description: {
             type: DataTypes.TEXT,
+            allowNull: true
+        },
+        fieldId: {
+            type: DataTypes.INTEGER,
             allowNull: true
         }
     }, {
