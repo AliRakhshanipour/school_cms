@@ -4,7 +4,8 @@
   "description": "school cms developed by express.js , postgersql, passport authentication",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon node app.js"
+    "test": "nodemon node app.js",
+    "start": "node app.js"
   },
   "keywords": [
     "nodejs",
@@ -14,19 +15,26 @@
   "author": "alirakhshanipour",
   "license": "ISC",
   "dependencies": {
+    "@mapbox/node-pre-gyp": "^1.0.11",
+    "@rollup/plugin-commonjs": "^26.0.1",
+    "@tinymce/tinymce-react": "^5.1.1",
     "auto-bind": "^5.0.1",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "express-formidable": "^1.2.0",
+    "formidable": "^3.5.1",
     "glob": "^11.0.0",
     "http-errors": "^2.0.0",
     "http-status-codes": "^2.3.0",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
+    "lru-cache": "^11.0.0",
     "mongoose": "^8.5.1",
     "multer": "^1.4.5-lts.1",
+    "npmlog": "^7.0.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.12.0",

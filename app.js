@@ -7,7 +7,8 @@ import { setupSwagger } from './src/configs/swagger.conf.js';
 import { dbSyncronize } from './src/models/index.js';
 import mainRoutes from './src/routes/index.js';
 import { connectMongoDB } from './src/configs/database.conf.js';
-import "./src/configs/passport.conf.js"
+import './src/configs/passport.conf.js';
+
 /**
  * Main function that initializes and starts the Express server.
  * 
@@ -25,10 +26,9 @@ import "./src/configs/passport.conf.js"
 const main = async () => {
     try {
         // Initialize Express application
-        const app = express(); // Use 'express()' to create an app instance
+        const app = express();
 
         // Apply middlewares
-        // Ensure middlewares are correctly defined
         app.use(...middlewares);
 
         // Setup Swagger for API documentation
@@ -37,12 +37,13 @@ const main = async () => {
         // Use main routes
         app.use('/', mainRoutes);
 
+
+
         // Synchronize the database
         await dbSyncronize();
-        await connectMongoDB()
+        await connectMongoDB();
 
         // Apply error handlers
-        // Ensure error handlers are correctly defined
         app.use(...ErrorHandlers);
 
         // Start the server
@@ -51,7 +52,7 @@ const main = async () => {
 
     } catch (error) {
         console.error('Failed to start the server:', error);
-        process.exit(1); // Exit the process with failure code
+        process.exit(1);
     }
 };
 
