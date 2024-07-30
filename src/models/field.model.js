@@ -18,10 +18,6 @@ class Field extends Model {
             }
         });
 
-        Field.belongsTo(models.Class, {
-            foreignKey: "fieldId",
-            onDelete: "CASCADE",
-        })
     }
 }
 

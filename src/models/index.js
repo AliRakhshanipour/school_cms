@@ -1,9 +1,8 @@
 import { sequelize } from "../configs/database.conf.js"
 import setupAssociations from "../utils/associate-models.js"
-import { initClass } from "./class.model.js"
 import { initField } from "./field.model.js"
 import { initImage } from "./image.model.js"
-import { initSession } from "./session.model.js"
+import { initRoom } from "./room.model.js"
 import { initStudent } from "./student.model.js"
 import { initTeacher } from "./teacher.model.js"
 import { initUser } from "./user.model.js"
@@ -34,10 +33,10 @@ export const models = {
     Image: initImage(sequelize),   // Initialize the Image model with the Sequelize instance
     Field: initField(sequelize),    // Initialize the Field model with the Sequelize instance
     Student: initStudent(sequelize), // Initialize the Student model with the Sequelize instance
-    Class: initClass(sequelize), // Initialize the Student model with the Sequelize instance
     Teacher: initTeacher(sequelize), // Initialize the Student model with the Sequelize instance
-    Session: initSession(sequelize), // Initialize the Student model with the Sequelize instance
+    Room: initRoom(sequelize), // Initialize the Room model with the Sequelize instance
 };
+
 
 
 // Setup model associations

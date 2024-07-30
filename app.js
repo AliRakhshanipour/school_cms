@@ -35,7 +35,7 @@ const startServer = async () => {
 
     const adminOptions = {
         // Pass models to `resources`
-        resources: [models.User, models.Field, models.Student, models.Image, models.Class],
+        resources: [models.User, models.Field, models.Student, models.Image],
     };
 
     // Initialize AdminJS

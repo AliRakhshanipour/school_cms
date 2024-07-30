@@ -15,10 +15,6 @@ class Student extends Model {
             }
         });
 
-        Student.belongsTo(models.Class, {
-            foreignKey: 'classId',
-            onDelete: 'CASCADE',
-        })
     }
 }
 
