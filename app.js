@@ -4,7 +4,7 @@ import './src/configs/dotenv-config.js';
 import { middlewares } from './src/middlewares/main.middleware.js';
 import { ErrorHandlers } from './src/error/error.handlers.js';
 import { setupSwagger } from './src/configs/swagger.conf.js';
-import { dbSyncronize, models } from './src/models/index.js';
+import { dbSynchronize, models } from './src/models/index.js';
 import mainRoutes from './src/routes/index.js';
 import { connectMongoDB } from './src/configs/database.conf.js';
 import './src/configs/passport.conf.js';
@@ -27,7 +27,7 @@ const startServer = async () => {
     // Start DB connection
     try {
         await connectMongoDB(); // Connect to MongoDB if using it
-        await dbSyncronize(); // Synchronize database models
+        await dbSynchronize(); // Synchronize database models
     } catch (dbError) {
         console.error('Database connection error:', dbError);
         process.exit(1); // Exit if DB connection fails
