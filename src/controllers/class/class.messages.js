@@ -1,23 +1,26 @@
 export const ClassMsg = Object.freeze({
     NOT_CREATED: () => {
-        return `class creation failed`
+        return 'Class creation failed';
     },
     CREATED: (number) => {
-        return `class with number: ${number} created successfully`
+        return `Class with number: ${number} created successfully`;
     },
     CLASS_ID_REQUIRED: () => {
-        return `class id is required`
+        return 'Class ID is required';
     },
     NOT_FOUND: (classId) => {
-        return `class not found with this id:${classId}`
+        return `Class not found with this ID: ${classId}`;
     },
     UPDATED: (classId) => {
-        return `class  with this id:${classId} updated successfully`
+        return `Class with this ID: ${classId} updated successfully`;
     },
     DELETED: (classId) => {
-        return `class with this id:${classId} deleted successfully`
+        return `Class with this ID: ${classId} deleted successfully`;
     },
     EXISTS: (number) => {
-        return `class with this id:${number} already exists`
+        return `Class with this number: ${number} already exists. Please choose another number.`;
     },
-})
+    NUMBER_CONFLICT: (number) => {
+        return `Another class with number: ${number} already exists. Please choose another number.`;
+    }
+});

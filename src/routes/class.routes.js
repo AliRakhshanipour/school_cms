@@ -51,6 +51,28 @@ const classRoutes = [
             ClassController.getClass
         ]
     },
+    {
+        method: 'patch',
+        path: '/:id/update',
+        middlewares: [
+            // isAuthenticated,
+            // ensureRoles('admin'), 
+        ],
+        handler: [
+            ClassController.updateClass
+        ]
+    },
+    {
+        method: 'delete',
+        path: '/:id/delete',
+        middlewares: [
+            // isAuthenticated,
+            // ensureRoles('admin'), 
+        ],
+        handler: [
+            ClassController.deleteClass
+        ]
+    },
 
 ];
 

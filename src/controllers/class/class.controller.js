@@ -4,6 +4,7 @@ import BaseController from "../base.controller.js";
 import { StatusCodes } from "http-status-codes";
 import { ClassMsg } from "./class.messages.js";
 import { Op } from "sequelize";
+import _ from "lodash";
 
 export const ClassController = (() => {
     /**
@@ -243,6 +244,113 @@ export const ClassController = (() => {
 
 
 
+        /**
+         * Updates a class's title and number by its ID.
+         * 
+         * @async
+         * @function
+         * @param {Object} req - Express request object.
+         * @param {Object} res - Express response object.
+         * @param {Function} next - Express next middleware function.
+         * @returns {Promise<void>}
+         * 
+         * @throws {Error} If there is an issue updating the class.
+         * 
+         * @description
+         * This function handles the update of a class's title and number. 
+         * It ensures that the number provided for the class is unique. 
+         * If another class with the same number already exists, an appropriate error message is returned.
+         */
+        async updateClass(req = request, res = response, next) {
+            try {
+                const { id: classId } = req.params;
+                const updatedData = _.omitBy(req.body, (value, key) => _.isNil(value) || value === '' || key === 'capacity');
+
+                // Check if the class exists with the given ID
+                const existingClass = await this.#model.findByPk(classId);
+
+                // If the class was not found
+                if (!existingClass) {
+                    return res.status(StatusCodes.NOT_FOUND).json({
+                        success: false,
+                        message: ClassMsg.NOT_FOUND(classId),
+                        errors: [{ message: ClassMsg.NOT_FOUND(classId), path: 'not_found_classId' }]
+                    });
+                }
+
+                // Check if the new number is taken by another class
+                if (updatedData.number) {
+                    const conflictingClass = await this.#model.findOne({ where: { number: updatedData.number } });
+
+                    if (conflictingClass && conflictingClass.id !== classId) {
+                        return res.status(StatusCodes.BAD_REQUEST).json({
+                            success: false,
+                            message: ClassMsg.NUMBER_CONFLICT(updatedData.number),
+                            errors: [{ message: ClassMsg.NUMBER_CONFLICT(updatedData.number), path: 'number_conflict' }]
+                        });
+                    }
+                }
+
+                // Update the class with the new data
+                await existingClass.update(updatedData);
+                await existingClass.save();
+
+                res.status(StatusCodes.OK).json({
+                    success: true,
+                    message: ClassMsg.UPDATED(classId),
+                    class: existingClass
+                });
+            } catch (error) {
+                next(error);
+            }
+        }
+
+
+
+        /**
+         * Deletes a class by its ID.
+         * 
+         * @async
+         * @function
+         * @param {Object} req - Express request object.
+         * @param {Object} res - Express response object.
+         * @param {Function} next - Express next middleware function.
+         * @returns {Promise<void>}
+         * 
+         * @throws {Error} If there is an issue deleting the class.
+         * 
+         * @description
+         * This function handles the deletion of a class identified by its ID. 
+         * If the class is found and successfully deleted, a success message is returned. 
+         * If the class is not found, a `404 Not Found` response is returned.
+         */
+        async deleteClass(req = request, res = response, next) {
+            try {
+                const { id: classId } = req.params;
+
+                // Check if the class exists with the given ID
+                const existingClass = await this.#model.findByPk(classId);
+
+                // If the class was not found
+                if (!existingClass) {
+                    return res.status(StatusCodes.NOT_FOUND).json({
+                        success: false,
+                        message: ClassMsg.NOT_FOUND(classId),
+                        errors: [{ message: ClassMsg.NOT_FOUND(classId), path: 'not_found_classId' }]
+                    });
+                }
+
+                // Delete the class
+                await existingClass.destroy();
+
+                res.status(StatusCodes.OK).json({
+                    success: true,
+                    message: ClassMsg.DELETED(classId)
+                });
+            } catch (error) {
+                next(error);
+            }
+        }
     }
 
     return new ClassController()
