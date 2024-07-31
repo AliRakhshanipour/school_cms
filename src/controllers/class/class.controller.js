@@ -3,6 +3,7 @@ import { models } from "../../models/index.js";
 import BaseController from "../base.controller.js";
 import { StatusCodes } from "http-status-codes";
 import { ClassMsg } from "./class.messages.js";
+import { Op } from "sequelize";
 
 export const ClassController = (() => {
     /**
@@ -153,6 +154,94 @@ export const ClassController = (() => {
                 return next(error);
             }
         }
+
+
+        /**
+         * Retrieves a list of classes with optional filtering, pagination, and sorting.
+         * 
+         * @async
+         * @function
+         * @param {Object} req - Express request object.
+         * @param {Object} res - Express response object.
+         * @param {Function} next - Express next middleware function.
+         * @returns {Promise<void>}
+         * 
+         * @throws {Error} If there is an issue retrieving the classes.
+         * 
+         * 
+         * @description
+         * This function handles the retrieval of classes with optional filtering by title, number, and capacity.
+         * Pagination is supported through the `page` and `limit` query parameters.
+         * Sorting can be done by `capacity` and `number` in ascending or descending order.
+         */
+        async getClasses(req = request, res = response, next) {
+            try {
+                const { page = 1, limit = 10, title, number, capacity, sortByCapacity, sortByNumber } = req.query;
+
+                // Validate and parse query parameters
+                const parsedPage = parseInt(page, 10);
+                const parsedLimit = parseInt(limit, 10);
+                const parsedNumber = number ? parseInt(number, 10) : undefined;
+                const parsedCapacity = capacity ? parseInt(capacity, 10) : undefined;
+
+                if (isNaN(parsedPage) || isNaN(parsedLimit) || (number && isNaN(parsedNumber)) || (capacity && isNaN(parsedCapacity))) {
+                    return res.status(StatusCodes.BAD_REQUEST).json({
+                        success: false,
+                        message: "Invalid query parameters",
+                        errors: [{ message: "Invalid query parameters", path: "query_parameters" }]
+                    });
+                }
+
+                const where = {};
+                if (title) {
+                    where.title = title;
+                }
+                if (number) {
+                    where.number = parsedNumber;
+                }
+                if (capacity) {
+                    where.capacity = parsedCapacity;
+                }
+
+                const offset = (parsedPage - 1) * parsedLimit;
+
+                // Determine sort options
+                const order = [];
+                if (sortByCapacity) {
+                    // Sorting by capacity (ascending or descending)
+                    order.push(['capacity', sortByCapacity.toUpperCase()]);
+                }
+                if (sortByNumber) {
+                    // Sorting by number (ascending or descending)
+                    order.push(['number', sortByNumber.toUpperCase()]);
+                }
+
+                const { count, rows: classes } = await this.#model.findAndCountAll({
+                    where,
+                    attributes: {
+                        exclude: ['createdAt', 'updatedAt']
+                    },
+                    limit: parsedLimit,
+                    offset: offset,
+                    order,
+                });
+
+                res.status(StatusCodes.OK).json({
+                    success: true,
+                    classes,
+                    pagination: {
+                        total: count,
+                        page: parsedPage,
+                        limit: parsedLimit,
+                        totalPages: Math.ceil(count / parsedLimit)
+                    }
+                });
+            } catch (error) {
+                next(error);
+            }
+        }
+
+
 
     }
 

@@ -31,6 +31,17 @@ const classRoutes = [
     },
     {
         method: 'get',
+        path: '/list',
+        middlewares: [
+            // isAuthenticated,
+            // ensureRoles('admin'), 
+        ],
+        handler: [
+            ClassController.getClasses
+        ]
+    },
+    {
+        method: 'get',
         path: '/:id',
         middlewares: [
             // isAuthenticated,
@@ -40,6 +51,7 @@ const classRoutes = [
             ClassController.getClass
         ]
     },
+
 ];
 
 /**
