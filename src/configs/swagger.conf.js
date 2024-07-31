@@ -58,6 +58,10 @@ const swaggerDefinition = {
             description: 'Endpoints related to room operations' // Description of the Rooms tag
         },
         {
+            name: 'Classes', // Tag for class-related endpoints
+            description: 'Endpoints related to class operations' // Description of the Classes tag
+        },
+        {
             name: 'Students', // Tag for student-related endpoints
             description: 'Endpoints related to student operations' // Description of the Students tag
         },
