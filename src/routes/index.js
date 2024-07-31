@@ -6,6 +6,7 @@ import studentRoutes from './student.routes.js';
 import fieldRoutes from './field.routes.js';
 import teacherRoutes from './teacher.routes.js';
 import roomRoutes from './room.routes.js';
+import classRoutes from './class.routes.js';
 
 const router = Router();
 
@@ -31,6 +32,7 @@ const mainRoutes = [
     { path: '/fields', router: fieldRoutes },
     { path: '/teachers', router: teacherRoutes },
     { path: '/rooms', router: roomRoutes },
+    { path: '/classes', router: classRoutes },
 ];
 
 /**

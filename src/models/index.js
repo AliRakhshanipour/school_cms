@@ -40,6 +40,7 @@ export const models = {
     Class: initClass(sequelize), // Initialize the Class model
 };
 
+
 // Setup model associations
 setupAssociations(models);
 

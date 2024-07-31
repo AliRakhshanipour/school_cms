@@ -1,29 +1,68 @@
 import { DataTypes, Model } from "sequelize";
+import { models } from "./index.js";
 
+/**
+ * Represents a class in the system.
+ * 
+ * @extends Model
+ */
 class Class extends Model {
+    /**
+     * Defines associations for the Class model.
+     * 
+     * @param {Object} models - The object containing all models.
+     */
     static associate(models) {
-        // Associate Class with Student
+        // Define one-to-many relationship between Class and Student
         Class.hasMany(models.Student, {
             foreignKey: 'classId',
-            onDelete: 'SET NULL', // Ensure students' classId is set to null if a class is deleted
-            onUpdate: 'CASCADE'  // Automatically update classId if it's updated
+            onDelete: 'SET NULL',  // Set classId to null if the class is deleted
+            onUpdate: 'CASCADE'    // Update classId if the referenced class is updated
         });
+    }
+
+    /**
+     * Checks if a class has reached its capacity.
+     * 
+     * @param {number} classId - The ID of the class to check.
+     * @returns {Promise<boolean>} - True if the class has reached its capacity, false otherwise.
+     * @throws {Error} - Throws an error if the class is not found.
+     */
+    static async isClassFull(classId) {
+        // Fetch the class instance by its primary key
+        const classInstance = await this.findByPk(classId);
+        if (!classInstance) {
+            throw new Error('Class not found');
+        }
+
+        // Count the number of students associated with the class
+        const studentCount = await models.Student.count({ where: { classId } });
+
+        // Return true if the student count is equal to or exceeds the class capacity
+        return studentCount >= classInstance.capacity;
     }
 }
 
+/**
+ * Initializes the Class model.
+ * 
+ * @param {import('sequelize').Sequelize} sequelize - The Sequelize instance to connect with the database.
+ * @returns {typeof Class} - The initialized Class model.
+ */
 export const initClass = (sequelize) => {
     Class.init({
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,
-            autoIncrement: true
+            autoIncrement: true,
+            allowNull: false
         },
         title: {
             type: DataTypes.STRING,
             allowNull: false,
             unique: {
                 args: true,
-                msg: 'this class title already exists'
+                msg: 'This class title already exists.'
             }
         },
         number: {
@@ -31,7 +70,7 @@ export const initClass = (sequelize) => {
             allowNull: false,
             unique: {
                 args: true,
-                msg: 'this class number already exists'
+                msg: 'This class number already exists.'
             }
         },
         capacity: {
@@ -41,8 +80,9 @@ export const initClass = (sequelize) => {
     }, {
         sequelize,
         modelName: 'Class',
-        tableName: 'classes'
-    })
+        tableName: 'classes',
+        timestamps: false, // Disable timestamps if not needed
+    });
 
     return Class;
-}
+};
