@@ -24,6 +24,34 @@ const roomRoutes = [
             RoomController.createRoom
         ]
     },
+    {
+        method: 'get',
+        path: '/list',
+        handler: [
+            RoomController.getRooms
+        ]
+    },
+    {
+        method: 'get',
+        path: '/:id',
+        handler: [
+            RoomController.getRoom
+        ]
+    },
+    {
+        method: 'patch',
+        path: '/:id/update',
+        handler: [
+            RoomController.updateRoom
+        ]
+    },
+    {
+        method: 'delete',
+        path: '/:id/delete',
+        handler: [
+            RoomController.deleteRoom
+        ]
+    },
 ];
 
 /**
