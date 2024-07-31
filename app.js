@@ -10,12 +10,8 @@ import { connectMongoDB } from './src/configs/database.conf.js';
 import './src/configs/passport.conf.js';
 import AdminJS from 'adminjs';
 import AdminJSExpress from '@adminjs/express';
-import * as AdminJSSequelize from '@adminjs/sequelize';
+import adminOptions from './src/configs/admin.conf.js';
 
-AdminJS.registerAdapter({
-    Resource: AdminJSSequelize.Resource,
-    Database: AdminJSSequelize.Database,
-});
 
 /**
  * Initialize and start the Express server.
@@ -32,11 +28,6 @@ const startServer = async () => {
         console.error('Database connection error:', dbError);
         process.exit(1); // Exit if DB connection fails
     }
-
-    const adminOptions = {
-        // Pass models to `resources`
-        resources: [models.User, models.Field, models.Student, models.Image],
-    };
 
     // Initialize AdminJS
     const admin = new AdminJS(adminOptions);

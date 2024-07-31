@@ -32,6 +32,22 @@
  *       example:
  *         title: "Updated Class Title"
  *         number: "202"
+ *     AddStudentsRequest:
+ *       type: object
+ *       properties:
+ *         studentIds:
+ *           type: array
+ *           items:
+ *             type: integer
+ *           description: List of student IDs to add to the class. Can be null.
+ *           example: [123, 456]
+ *         nationalCodes:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: List of student national codes to add to the class. Can be null.
+ *           example: ["NC123456", "NC654321"]
+ *       required: []
  */
 
 /**
@@ -453,6 +469,193 @@
  *                 message:
  *                   type: string
  *                   example: "Class with ID {classId} not found"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
+ */
+
+
+/**
+ * @swagger
+ * /classes/{id}/change-capacity:
+ *   patch:
+ *     summary: Update the capacity of a class by its ID
+ *     tags: [Classes]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the class whose capacity is to be updated
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               newCapacity:
+ *                 type: integer
+ *                 example: 30
+ *             required:
+ *               - newCapacity
+ *     responses:
+ *       200:
+ *         description: Class capacity updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Capacity of class with ID {classId} updated to {newCapacity}."
+ *                 class:
+ *                   $ref: '#/components/schemas/Class'
+ *       400:
+ *         description: Bad request due to invalid new capacity
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid capacity. It must be a positive integer."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       message:
+ *                         type: string
+ *                         example: "Invalid capacity. It must be a positive integer."
+ *                       path:
+ *                         type: string
+ *                         example: "new_capacity"
+ *       404:
+ *         description: Class not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Class not found with this ID: {classId}"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
+ */
+
+
+/**
+ * @swagger
+ * /classes/{id}/students/add:
+ *   patch:
+ *     summary: Add students to a class
+ *     tags: [Classes]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the class to which students will be added
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/AddStudentsRequest'
+ *         application/x-www-form-urlencoded:
+ *           schema:
+ *             $ref: '#/components/schemas/AddStudentsRequest'
+ *     responses:
+ *       200:
+ *         description: Students added to the class successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Students added to class with ID 123."
+ *                 students:
+ *                   type: array
+ *                   items:
+ *                     type: integer
+ *       400:
+ *         description: Bad request due to invalid input or students already enrolled in another class
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Some students are already enrolled in another class."
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       message:
+ *                         type: string
+ *                         example: "Student with ID 456 is already enrolled in class 789."
+ *                       path:
+ *                         type: string
+ *                         example: "student_enrollment"
+ *       404:
+ *         description: Class not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Class not found with this ID: 123"
  *       500:
  *         description: Internal server error
  *         content:

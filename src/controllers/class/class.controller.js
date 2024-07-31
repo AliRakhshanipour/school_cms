@@ -222,6 +222,11 @@ export const ClassController = (() => {
                     attributes: {
                         exclude: ['createdAt', 'updatedAt']
                     },
+                    include: [{
+                        model: this.#studentModel,
+                        as: 'Students',
+                        attributes: ['id', 'national_code']
+                    }],
                     limit: parsedLimit,
                     offset: offset,
                     order,

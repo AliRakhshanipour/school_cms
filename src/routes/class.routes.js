@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { AuthorizeMiddleware } from '../middlewares/auth/auth.middlewares.js';
 import { ClassController } from '../controllers/class/class.controller.js';
 import { registerRoutes } from '../utils/router-registrar.js';
+import { ClassService } from '../services/class/class.service.js';
 
 const router = Router();
 
@@ -23,7 +24,7 @@ const classRoutes = [
         path: '/create',
         middlewares: [
             // isAuthenticated,
-            // ensureRoles('admin'), 
+            // ensureRoles('admin'),
         ],
         handler: [
             ClassController.createClass
@@ -34,7 +35,7 @@ const classRoutes = [
         path: '/list',
         middlewares: [
             // isAuthenticated,
-            // ensureRoles('admin'), 
+            // ensureRoles('admin'),
         ],
         handler: [
             ClassController.getClasses
@@ -45,7 +46,7 @@ const classRoutes = [
         path: '/:id',
         middlewares: [
             // isAuthenticated,
-            // ensureRoles('admin'), 
+            // ensureRoles('admin'),
         ],
         handler: [
             ClassController.getClass
@@ -56,10 +57,21 @@ const classRoutes = [
         path: '/:id/update',
         middlewares: [
             // isAuthenticated,
-            // ensureRoles('admin'), 
+            // ensureRoles('admin'),
         ],
         handler: [
             ClassController.updateClass
+        ]
+    },
+    {
+        method: 'patch',
+        path: '/:id/change-capacity',
+        middlewares: [
+            // isAuthenticated,
+            // ensureRoles('admin'),
+        ],
+        handler: [
+            ClassService.changeCapacity
         ]
     },
     {
@@ -67,13 +79,23 @@ const classRoutes = [
         path: '/:id/delete',
         middlewares: [
             // isAuthenticated,
-            // ensureRoles('admin'), 
+            // ensureRoles('admin'),
         ],
         handler: [
             ClassController.deleteClass
         ]
     },
-
+    {
+        method: 'patch',
+        path: '/:id/students/add',
+        middlewares: [
+            // isAuthenticated,
+            // ensureRoles('admin'),
+        ],
+        handler: [
+            ClassService.addStudentsToClass
+        ]
+    },
 ];
 
 /**

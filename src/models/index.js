@@ -40,7 +40,6 @@ export const models = {
     Class: initClass(sequelize), // Initialize the Class model
 };
 
-
 // Setup model associations
 setupAssociations(models);
 
@@ -69,6 +68,6 @@ export async function dbSynchronize() {
         console.log("Sequelize synchronization successful");
     } catch (error) {
         console.error("Error synchronizing the database:", error);
-        throw error;
+        throw error; // Re-throw the error to be handled by higher-level logic
     }
 }
