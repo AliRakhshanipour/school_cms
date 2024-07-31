@@ -5,7 +5,7 @@ import { RoomController } from '../controllers/room/room.controller.js';
 
 const router = Router();
 
-const { isAuthenticated, ensureRoles, ensureRolesOrSuperuser } = AuthorizeMiddleware;
+const { isAuthenticated, ensureRoles } = AuthorizeMiddleware;
 
 /**
  * Array of route configurations for room-related operations.
@@ -15,6 +15,7 @@ const { isAuthenticated, ensureRoles, ensureRolesOrSuperuser } = AuthorizeMiddle
  * @property {string} method - HTTP method for the route (e.g., 'post', 'get', 'patch', 'delete').
  * @property {string} path - Path for the route (e.g., '/create', '/list', '/:id/update').
  * @property {Array} handler - Array of handler functions for the route.
+ * @property {Array} middlewares - Array of middleware functions to be applied to the route.
  */
 const roomRoutes = [
     {
@@ -22,6 +23,10 @@ const roomRoutes = [
         path: '/create',
         handler: [
             RoomController.createRoom
+        ],
+        middlewares: [
+            isAuthenticated,
+            ensureRoles('admin') // Restrict access to admins
         ]
     },
     {
@@ -29,6 +34,10 @@ const roomRoutes = [
         path: '/list',
         handler: [
             RoomController.getRooms
+        ],
+        middlewares: [
+            isAuthenticated,
+            ensureRoles('admin') // Restrict access to admins
         ]
     },
     {
@@ -36,6 +45,10 @@ const roomRoutes = [
         path: '/:id',
         handler: [
             RoomController.getRoom
+        ],
+        middlewares: [
+            isAuthenticated,
+            ensureRoles('admin') // Restrict access to admins
         ]
     },
     {
@@ -43,6 +56,10 @@ const roomRoutes = [
         path: '/:id/update',
         handler: [
             RoomController.updateRoom
+        ],
+        middlewares: [
+            isAuthenticated,
+            ensureRoles('admin') // Restrict access to admins
         ]
     },
     {
@@ -50,6 +67,10 @@ const roomRoutes = [
         path: '/:id/delete',
         handler: [
             RoomController.deleteRoom
+        ],
+        middlewares: [
+            isAuthenticated,
+            ensureRoles('admin') // Restrict access to admins
         ]
     },
 ];

@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import { registerRoutes } from '../utils/router-registrar.js';
 import { AuthorizeMiddleware } from '../middlewares/auth/auth.middlewares.js';
-import profileUploader from "../utils/multer.js";
+import profileUploader from '../utils/multer.js';
 import { StudentController } from '../controllers/student/student.controller.js';
 import { validateStudent } from '../middlewares/validations/student.validation.js';
 
 const router = Router();
 
-const { isAuthenticated, ensureRoles, ensureRolesOrSuperuser } = AuthorizeMiddleware;
+const { isAuthenticated, ensureRoles } = AuthorizeMiddleware;
 
 /**
  * Array of route configurations for student-related operations.
@@ -16,58 +16,71 @@ const { isAuthenticated, ensureRoles, ensureRolesOrSuperuser } = AuthorizeMiddle
  * @type {Array}
  * @property {string} method - HTTP method for the route (e.g., 'post', 'get', 'patch', 'delete').
  * @property {string} path - Path for the route (e.g., '/create', '/list', '/:id/update').
- * @property {Array} handler - Array of handler functions for the route.
+ * @property {Array<Function>} [middlewares] - Optional array of middleware functions to apply to the route.
+ * @property {Array<Function>} handler - Array of handler functions for the route.
  */
 const studentRoutes = [
     {
         method: 'post',
         path: '/create',
-        handler: [
+        middlewares: [
             isAuthenticated,
-            ensureRoles(["admin"]),
+            ensureRoles(['admin']),
             profileUploader.single('profilePicture'),
-            validateStudent,
+            validateStudent
+        ],
+        handler: [
             StudentController.createStudent
         ]
     },
     {
         method: 'get',
         path: '/list',
-        handler: [StudentController.getStudents]
+        handler: [
+            StudentController.getStudents
+        ]
     },
     {
         method: 'get',
         path: '/:id',
-        handler: [StudentController.getStudent]
+        handler: [
+            StudentController.getStudent
+        ]
     },
     {
         method: 'patch',
         path: '/:id/update',
-        handler: [
+        middlewares: [
             isAuthenticated,
-            ensureRoles(["admin"]),
-            profileUploader.single('profilePicture'),
+            ensureRoles(['admin']),
+            profileUploader.single('profilePicture')
+        ],
+        handler: [
             StudentController.updateStudent
         ]
     },
     {
         method: 'delete',
         path: '/:id/delete',
-        handler: [
+        middlewares: [
             isAuthenticated,
-            ensureRoles(["admin"]),
+            ensureRoles(['admin'])
+        ],
+        handler: [
             StudentController.deleteStudent
         ]
     },
     {
         method: 'post',
         path: '/student-create',
-        handler: [
+        middlewares: [
             profileUploader.single('profilePicture'),
-            validateStudent,
+            validateStudent
+        ],
+        handler: [
             StudentController.createStudent
         ]
-    },
+    }
 ];
 
 /**

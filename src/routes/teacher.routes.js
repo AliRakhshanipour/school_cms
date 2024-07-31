@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import { registerRoutes } from '../utils/router-registrar.js';
 import { AuthorizeMiddleware } from '../middlewares/auth/auth.middlewares.js';
-import profileUploader from "../utils/multer.js";
+import profileUploader from '../utils/multer.js';
 import { TeacherController } from '../controllers/teacher/teacher.controller.js';
 
 const router = Router();
 
-const { isAuthenticated, ensureRoles, ensureRolesOrSuperuser } = AuthorizeMiddleware;
+const { isAuthenticated, ensureRoles } = AuthorizeMiddleware;
 
 /**
  * Array of route configurations for teacher-related operations.
@@ -15,46 +15,59 @@ const { isAuthenticated, ensureRoles, ensureRolesOrSuperuser } = AuthorizeMiddle
  * @type {Array}
  * @property {string} method - HTTP method for the route (e.g., 'post', 'get', 'patch', 'delete').
  * @property {string} path - Path for the route (e.g., '/create', '/list', '/:id/update').
- * @property {Array} handler - Array of handler functions for the route.
+ * @property {Array<Function>} [middlewares] - Optional array of middleware functions to apply to the route.
+ * @property {Array<Function>} handler - Array of handler functions for the route.
  */
 const teacherRoutes = [
     {
         method: 'post',
         path: '/create',
+        middlewares: [
+            isAuthenticated,  // Ensures the user is authenticated
+            ensureRoles(['admin']),  // Ensures the user has admin role
+            profileUploader.single('teacherPicture')  // Handles file upload for teacherPicture
+        ],
         handler: [
-            profileUploader.single('teacherPicture'),
-            TeacherController.createTeacher
+            TeacherController.createTeacher  // Controller method to handle teacher creation
         ]
     },
     {
         method: 'get',
         path: '/list',
         handler: [
-            TeacherController.getTeachers
+            TeacherController.getTeachers  // Controller method to handle retrieval of teachers list
         ]
     },
     {
         method: 'get',
         path: '/:id',
         handler: [
-            TeacherController.getTeacher
+            TeacherController.getTeacher  // Controller method to handle retrieval of a specific teacher by ID
         ]
     },
     {
         method: 'patch',
         path: '/:id/update',
+        middlewares: [
+            isAuthenticated,  // Ensures the user is authenticated
+            ensureRoles(['admin']),  // Ensures the user has admin role
+            profileUploader.single('teacherPicture')  // Handles file upload for teacherPicture
+        ],
         handler: [
-            profileUploader.single('teacherPicture'),
-            TeacherController.updateTeacher
+            TeacherController.updateTeacher  // Controller method to handle teacher update
         ]
     },
     {
         method: 'delete',
         path: '/:id/delete',
+        middlewares: [
+            isAuthenticated,  // Ensures the user is authenticated
+            ensureRoles(['admin'])  // Ensures the user has admin role
+        ],
         handler: [
-            TeacherController.deleteTeacher
+            TeacherController.deleteTeacher  // Controller method to handle teacher deletion
         ]
-    },
+    }
 ];
 
 /**
