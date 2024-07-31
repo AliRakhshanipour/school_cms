@@ -5,6 +5,15 @@ import { DataTypes, Model } from "sequelize";
  */
 class Student extends Model {
     static associate(models) {
+
+        // Associate Student with Class
+        Student.belongsTo(models.Class, {
+            foreignKey: 'classId',
+            onDelete: 'SET NULL', // Update this to set classId to null if Class is deleted
+            onUpdate: 'CASCADE'  // Automatically update classId if it's updated
+        });
+
+
         // Associate Student with Image using a polymorphic association
         Student.hasOne(models.Image, {
             foreignKey: 'imageableId',
@@ -73,7 +82,7 @@ export const initStudent = (sequelize) => {
         },
         classId: {
             type: DataTypes.INTEGER,
-            allowNull: false
+            allowNull: true
         }
     }, {
         sequelize,
