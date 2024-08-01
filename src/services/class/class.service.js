@@ -97,7 +97,7 @@ export const ClassService = (() => {
                 const { id: classId } = req.params;
                 let { studentIds = [], nationalCodes = [] } = req.body;
 
-                // Normalize and validate studentIds
+                // Normalize and validate studentIds and nationalCodes
                 studentIds = this.#normalizeArray(studentIds);
                 nationalCodes = this.#normalizeArray(nationalCodes, true);
 
@@ -120,8 +120,25 @@ export const ClassService = (() => {
                     });
                 }
 
-                // Fetch and deduplicate students
+                // Fetch existing students
                 const allStudents = await this.#fetchStudents(studentIds, nationalCodes);
+                const existingStudentIds = new Set(allStudents.map(student => student.id));
+                const existingNationalCodes = new Set(allStudents.map(student => student.national_code));
+
+                // Filter out non-existing students
+                studentIds = studentIds.filter(id => existingStudentIds.has(id));
+                nationalCodes = nationalCodes.filter(code => existingNationalCodes.has(code));
+
+                // If no valid students are left after filtering
+                if (studentIds.length === 0 && nationalCodes.length === 0) {
+                    return res.status(StatusCodes.BAD_REQUEST).json({
+                        success: false,
+                        message: "No valid students found to add to the class.",
+                        errors: [{ message: "All provided student IDs or national codes are invalid.", path: "students" }]
+                    });
+                }
+
+                // Fetch and deduplicate students
                 const uniqueStudentIds = Array.from(new Set(allStudents.map(student => student.id)));
 
                 // Check if students are already enrolled in another class
@@ -152,7 +169,6 @@ export const ClassService = (() => {
                 next(error);
             }
         }
-
 
 
         /**
