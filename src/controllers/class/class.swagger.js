@@ -670,3 +670,64 @@
  *                   type: string
  *                   example: "Internal server error"
  */
+
+/**
+ * @swagger
+ * /classes/{classId}/remove-student/{studentId}:
+ *   patch:
+ *     summary: Remove a student from a class
+ *     tags: [Classes]
+ *     parameters:
+ *       - in: path
+ *         name: classId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the class
+ *       - in: path
+ *         name: studentId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the student to remove from the class
+ *     responses:
+ *       200:
+ *         description: Student removed from the class successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Student with ID {studentId} removed from class with ID {classId} successfully"
+ *       404:
+ *         description: Class or Student not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Class with ID {classId} or Student with ID {studentId} not found"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
+ */

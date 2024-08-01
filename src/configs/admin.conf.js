@@ -1,9 +1,8 @@
-// admin.config.js
+// src/admin.config.js
 import AdminJS from 'adminjs';
 import AdminJSExpress from '@adminjs/express';
 import * as AdminJSSequelize from '@adminjs/sequelize';
 import { models } from '../models/index.js';
-
 
 AdminJS.registerAdapter({
     Resource: AdminJSSequelize.Resource,
@@ -17,17 +16,18 @@ export const adminOptions = {
             resource: models.User,
             options: {
                 // Customize admin panel for the User model
+                label: 'کاربر', // Farsi name for the User model
                 properties: {
-                    id: { isVisible: true },
-                    username: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    email: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    phone: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    role: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    isSuperuser: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    otp: { isVisible: { list: false, filter: false, show: true, edit: true } },
-                    otpExpiry: { isVisible: { list: false, filter: false, show: true, edit: true } },
-                    activity: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    profilePicture: { isVisible: { list: false, filter: false, show: true, edit: false } },
+                    id: { isVisible: true, label: 'شناسه' },
+                    username: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'نام کاربری' },
+                    email: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'ایمیل' },
+                    phone: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'تلفن' },
+                    role: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'نقش' },
+                    isSuperuser: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'سوپر کاربر' },
+                    otp: { isVisible: { list: false, filter: false, show: true, edit: true }, label: 'کد تایید' },
+                    otpExpiry: { isVisible: { list: false, filter: false, show: true, edit: true }, label: 'تاریخ انقضای کد تایید' },
+                    activity: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'فعالیت' },
+                    profilePicture: { isVisible: { list: false, filter: false, show: true, edit: false }, label: 'تصویر پروفایل' },
                 },
             }
         },
@@ -35,18 +35,19 @@ export const adminOptions = {
             resource: models.Teacher,
             options: {
                 // Customize admin panel for the Teacher model
+                label: 'معلم', // Farsi name for the Teacher model
                 properties: {
-                    id: { isVisible: true },
-                    first_name: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    last_name: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    personal_code: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    phone: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    email: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    hire_date: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    is_active: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    subject_specialization: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    date_of_birth: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    teacherPicture: { isVisible: { list: false, filter: false, show: true, edit: false } },
+                    id: { isVisible: true, label: 'شناسه' },
+                    first_name: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'نام' },
+                    last_name: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'نام خانوادگی' },
+                    personal_code: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'کد ملی' },
+                    phone: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'تلفن' },
+                    email: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'ایمیل' },
+                    hire_date: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'تاریخ استخدام' },
+                    is_active: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'وضعیت' },
+                    subject_specialization: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'تخصص' },
+                    date_of_birth: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'تاریخ تولد' },
+                    teacherPicture: { isVisible: { list: false, filter: false, show: true, edit: false }, label: 'تصویر معلم' },
                 }
             }
         },
@@ -54,21 +55,22 @@ export const adminOptions = {
             resource: models.Student,
             options: {
                 // Customize admin panel for the Student model
+                label: 'دانش‌آموز', // Farsi name for the Student model
                 properties: {
-                    id: { isVisible: true },
-                    first_name: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    last_name: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    national_code: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    fatehr_name: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    fatehr_job: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    mother_job: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    father_education: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    mother_education: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    math_grade: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    avg_grade: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    discipline_grade: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    classId: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    studentPicture: { isVisible: { list: false, filter: false, show: true, edit: false } },
+                    id: { isVisible: true, label: 'شناسه' },
+                    first_name: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'نام' },
+                    last_name: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'نام خانوادگی' },
+                    national_code: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'کد ملی' },
+                    fatehr_name: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'نام پدر' },
+                    fatehr_job: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'شغل پدر' },
+                    mother_job: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'شغل مادر' },
+                    father_education: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'تحصیلات پدر' },
+                    mother_education: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'تحصیلات مادر' },
+                    math_grade: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'نمره ریاضی' },
+                    avg_grade: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'میانگین نمرات' },
+                    discipline_grade: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'نمره انضباط' },
+                    classId: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'شناسه کلاس' },
+                    studentPicture: { isVisible: { list: false, filter: false, show: true, edit: false }, label: 'تصویر دانش‌آموز' },
                 }
             }
         },
@@ -76,10 +78,11 @@ export const adminOptions = {
             resource: models.Room,
             options: {
                 // Customize admin panel for the Room model
+                label: 'اتاق', // Farsi name for the Room model
                 properties: {
-                    id: { isVisible: true },
-                    title: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    number: { isVisible: { list: true, filter: true, show: true, edit: true } },
+                    id: { isVisible: true, label: 'شناسه' },
+                    title: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'عنوان' },
+                    number: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'شماره' },
                 }
             }
         },
@@ -87,12 +90,13 @@ export const adminOptions = {
             resource: models.Image,
             options: {
                 // Customize admin panel for the Image model
+                label: 'تصویر', // Farsi name for the Image model
                 properties: {
-                    id: { isVisible: true },
-                    title: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    url: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    imageableId: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    imageableType: { isVisible: { list: true, filter: true, show: true, edit: true } },
+                    id: { isVisible: true, label: 'شناسه' },
+                    title: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'عنوان' },
+                    url: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'آدرس' },
+                    imageableId: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'شناسه تصویرپذیر' },
+                    imageableType: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'نوع تصویرپذیر' },
                 }
             }
         },
@@ -100,12 +104,13 @@ export const adminOptions = {
             resource: models.Field,
             options: {
                 // Customize admin panel for the Field model
+                label: 'فیلد', // Farsi name for the Field model
                 properties: {
-                    id: { isVisible: true },
-                    title: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    short_text: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    grade: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    description: { isVisible: { list: true, filter: true, show: true, edit: true } },
+                    id: { isVisible: true, label: 'شناسه' },
+                    title: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'عنوان' },
+                    short_text: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'متن کوتاه' },
+                    grade: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'نمره' },
+                    description: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'توضیحات' },
                 }
             }
         },
@@ -113,11 +118,12 @@ export const adminOptions = {
             resource: models.Class,
             options: {
                 // Customize admin panel for the Class model
+                label: 'کلاس', // Farsi name for the Class model
                 properties: {
-                    id: { isVisible: true },
-                    title: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    number: { isVisible: { list: true, filter: true, show: true, edit: true } },
-                    capacity: { isVisible: { list: true, filter: true, show: true, edit: true } },
+                    id: { isVisible: true, label: 'شناسه' },
+                    title: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'عنوان' },
+                    number: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'شماره' },
+                    capacity: { isVisible: { list: true, filter: true, show: true, edit: true }, label: 'ظرفیت' },
                 }
             }
         },

@@ -96,6 +96,17 @@ const classRoutes = [
             ClassService.addStudentsToClass
         ]
     },
+    {
+        method: 'patch',
+        path: '/:id/remove-student/:studentId',
+        middlewares: [
+            // isAuthenticated,
+            // ensureRoles('admin'),
+        ],
+        handler: [
+            ClassService.removeStudentFromClass
+        ]
+    },
 ];
 
 /**

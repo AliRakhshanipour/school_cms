@@ -153,6 +153,74 @@ export const ClassService = (() => {
             }
         }
 
+
+
+        /**
+         * Removes a student from a class and sets the classId to null.
+         * 
+         * @async
+         * @function
+         * @param {Object} req - Express request object.
+         * @param {Object} res - Express response object.
+         * @param {Function} next - Express next middleware function.
+         * @returns {Promise<void>}
+         * 
+         * @throws {Error} If there is an issue removing the student from the class.
+         * 
+         * @description
+         * This function handles removing a student from a class identified by their IDs.
+         * The student's classId is set to null to indicate they are no longer enrolled in the class.
+         */
+        async removeStudentFromClass(req = request, res = response, next) {
+            try {
+                const { id: classId, studentId } = req.params;
+
+                // Convert IDs to integers for reliable comparison
+                const classIdInt = parseInt(classId, 10);
+                const studentIdInt = parseInt(studentId, 10);
+
+                // Find the class
+                const classInstance = await this.#model.findByPk(classIdInt);
+                if (!classInstance) {
+                    return res.status(StatusCodes.NOT_FOUND).json({
+                        success: false,
+                        message: ClassMsg.NOT_FOUND(classIdInt),
+                        errors: [{ message: ClassMsg.NOT_FOUND(classIdInt), path: "classId" }]
+                    });
+                }
+
+                // Find the student
+                const studentInstance = await this.#studentModel.findByPk(studentIdInt);
+                if (!studentInstance) {
+                    return res.status(StatusCodes.NOT_FOUND).json({
+                        success: false,
+                        message: `Student with ID ${studentIdInt} not found.`,
+                        errors: [{ message: `Student with ID ${studentIdInt} not found.`, path: "studentId" }]
+                    });
+                }
+
+                // Check if the student is enrolled in the class
+                if (studentInstance.classId !== classIdInt) {
+                    return res.status(StatusCodes.BAD_REQUEST).json({
+                        success: false,
+                        message: `Student with ID ${studentIdInt} is not enrolled in class with ID ${classIdInt}.`,
+                        errors: [{ message: `Student with ID ${studentIdInt} is not enrolled in class with ID ${classIdInt}.`, path: "studentId" }]
+                    });
+                }
+
+                // Remove the student from the class
+                studentInstance.classId = null;
+                await studentInstance.save();
+
+                res.status(StatusCodes.OK).json({
+                    success: true,
+                    message: `Student with ID ${studentIdInt} removed from class with ID ${classIdInt} successfully.`,
+                });
+            } catch (error) {
+                next(error);
+            }
+        }
+
         /**
          * Normalizes input arrays from various formats.
          * 
@@ -202,6 +270,7 @@ export const ClassService = (() => {
             });
             return enrolledStudents.filter(student => student.class && student.class.id !== classId);
         }
+
     }
 
     return new ClassService();
