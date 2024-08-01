@@ -11,6 +11,12 @@ class Teacher extends Model {
                 imageableType: 'teacher'
             }
         });
+
+        Teacher.hasMany(models.Session, {
+            foreignKey: 'teacherId',
+            onDelete: 'SET NULL',
+            onUpdate: 'CASCADE'
+        })
     }
 }
 

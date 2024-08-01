@@ -19,6 +19,12 @@ class Class extends Model {
             onDelete: 'SET NULL',  // Set classId to null if the class is deleted
             onUpdate: 'CASCADE'    // Update classId if the referenced class is updated
         });
+
+        Class.hasMany(models.Session, {
+            foreignKey: 'classId',
+            onDelete: 'SET NULL',
+            onUpdate: 'CASCADE'
+        })
     }
 
     /**

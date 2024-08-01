@@ -6,6 +6,7 @@ import { initClass } from "./class.model.js";
 import { initField } from "./field.model.js";
 import { initImage } from "./image.model.js";
 import { initRoom } from "./room.model.js";
+import { initSession } from "./session.model.js";
 import { initStudent } from "./student.model.js";
 import { initTeacher } from "./teacher.model.js";
 import { initUser } from "./user.model.js";
@@ -23,6 +24,7 @@ import { initUser } from "./user.model.js";
  * @property {Object} Teacher - The initialized Teacher model.
  * @property {Object} Room - The initialized Room model.
  * @property {Object} Class - The initialized Class model.
+ * @property {Object} Session - The initialized Session model.
  * 
  * @example
  * import { models } from './path/to/models';
@@ -38,6 +40,7 @@ export const models = {
     Teacher: initTeacher(sequelize), // Initialize the Teacher model
     Room: initRoom(sequelize), // Initialize the Room model
     Class: initClass(sequelize), // Initialize the Class model
+    Session: initSession(sequelize), // Initialize the Session model
 };
 
 // Setup model associations
