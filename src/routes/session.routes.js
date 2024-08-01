@@ -31,7 +31,7 @@ const sessionRoutes = [
         method: 'get',
         path: '/list',
         handler: [
-
+            SessionController.getSessions
         ]
     },
     {
