@@ -43,6 +43,7 @@ export const models = {
     Session: initSession(sequelize), // Initialize the Session model
 };
 
+
 // Setup model associations
 setupAssociations(models);
 

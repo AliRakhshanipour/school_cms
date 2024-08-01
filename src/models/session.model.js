@@ -13,6 +13,12 @@ class Session extends Model {
      */
     static associate(models) {
         // Define a belongs-to relationship with the Class model
+        Session.belongsTo(models.Room, {
+            foreignKey: 'roomId',
+            onDelete: 'SET NULL',  // Set roomId to null if the class is deleted
+            onUpdate: 'CASCADE'    // Update classId if the referenced class is updated
+        });
+        // Define a belongs-to relationship with the Class model
         Session.belongsTo(models.Class, {
             foreignKey: 'classId',
             onDelete: 'SET NULL',  // Set classId to null if the class is deleted
@@ -45,10 +51,6 @@ export const initSession = (sequelize) => {
         roomId: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            references: {
-                model: 'rooms', // Ensure you have a 'rooms' model
-                key: 'id'
-            }
         },
         day: {
             type: DataTypes.ENUM('Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday'),

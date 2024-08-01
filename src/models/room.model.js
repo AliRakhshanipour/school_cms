@@ -10,6 +10,11 @@ class Room extends Model {
      */
     static associate(models) {
         // Define associations here if needed in the future
+        Room.hasMany(models.Session, {
+            foreignKey: 'roomId',
+            onDelete: 'SET NULL',  // Set roomId to null if the class is deleted
+            onUpdate: 'CASCADE'    // Update classId if the referenced class is updated
+        });
     }
 }
 

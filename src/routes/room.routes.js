@@ -25,8 +25,8 @@ const roomRoutes = [
             RoomController.createRoom
         ],
         middlewares: [
-            isAuthenticated,
-            ensureRoles('admin') // Restrict access to admins
+            // isAuthenticated,
+            // ensureRoles('admin') // Restrict access to admins
         ]
     },
     {
@@ -36,8 +36,8 @@ const roomRoutes = [
             RoomController.getRooms
         ],
         middlewares: [
-            isAuthenticated,
-            ensureRoles('admin') // Restrict access to admins
+            // isAuthenticated,
+            // ensureRoles('admin') // Restrict access to admins
         ]
     },
     {
@@ -47,8 +47,8 @@ const roomRoutes = [
             RoomController.getRoom
         ],
         middlewares: [
-            isAuthenticated,
-            ensureRoles('admin') // Restrict access to admins
+            // isAuthenticated,
+            // ensureRoles('admin') // Restrict access to admins
         ]
     },
     {
@@ -58,19 +58,19 @@ const roomRoutes = [
             RoomController.updateRoom
         ],
         middlewares: [
-            isAuthenticated,
-            ensureRoles('admin') // Restrict access to admins
+            // isAuthenticated,
+            // ensureRoles('admin') 
         ]
     },
     {
         method: 'delete',
         path: '/:id/delete',
         handler: [
-            RoomController.deleteRoom
+            // RoomController.deleteRoom
         ],
         middlewares: [
-            isAuthenticated,
-            ensureRoles('admin') // Restrict access to admins
+            // isAuthenticated,
+            // ensureRoles('admin')
         ]
     },
 ];
