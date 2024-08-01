@@ -80,6 +80,69 @@ export const StudentController = (() => {
         }
 
         /**
+         * Creates multiple new students.
+         * 
+         * @async
+         * @param {Object} req - The request object containing an array of student data.
+         * @param {Object} res - The response object.
+         * @param {Function} next - The next middleware function.
+         * @returns {Promise<void>}
+         */
+        async createStudents(req = request, res = response, next) {
+            try {
+                const studentsData = req.body;
+
+                if (!Array.isArray(studentsData) || studentsData.length === 0) {
+                    return res.status(StatusCodes.BAD_REQUEST).json({
+                        success: false,
+                        message: "Invalid input. An array of student objects is required.",
+                        errors: [{ message: "No student data provided", path: "studentsData" }]
+                    });
+                }
+
+                // Validate each student data object
+                const errors = [];
+                const validStudents = [];
+
+                for (const studentData of studentsData) {
+                    const existingStudent = await this.#model.findOne({
+                        where: { national_code: studentData.national_code }
+                    });
+
+                    if (existingStudent) {
+                        errors.push({
+                            message: `National code ${studentData.national_code} already exists.`,
+                            path: ["national_code"]
+                        });
+                        continue;
+                    }
+
+                    validStudents.push(studentData);
+                }
+
+                if (errors.length > 0) {
+                    return res.status(StatusCodes.BAD_REQUEST).json({
+                        success: false,
+                        message: "Validation errors.",
+                        errors
+                    });
+                }
+
+                // Bulk create students
+                const createdStudents = await this.#model.bulkCreate(validStudents);
+
+                // Handle profile pictures if needed
+                // Iterate through validStudents to upload profile pictures if files are present
+
+                res.status(StatusCodes.CREATED).json({
+                    success: true,
+                    students: createdStudents
+                });
+            } catch (error) {
+                next(error);
+            }
+        }
+        /**
          * Retrieves a list of students with optional filters for national code, first name, last name,
          * and ranges for average grade, math grade, and discipline grade.
          * 

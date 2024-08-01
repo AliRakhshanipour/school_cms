@@ -22,6 +22,19 @@ const { isAuthenticated, ensureRoles } = AuthorizeMiddleware;
 const studentRoutes = [
     {
         method: 'post',
+        path: '/bulk-create',
+        middlewares: [
+            // isAuthenticated,
+            // ensureRoles(['admin']),
+            // profileUploader.single('profilePicture'),
+            // validateStudent
+        ],
+        handler: [
+            StudentController.createStudents
+        ]
+    },
+    {
+        method: 'post',
         path: '/create',
         middlewares: [
             isAuthenticated,

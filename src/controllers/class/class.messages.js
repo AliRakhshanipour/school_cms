@@ -40,5 +40,8 @@ export const ClassMsg = Object.freeze({
     },
     STUDENT_NOT_FOUND: (identifier) => {
         return `Student with ID or national code ${identifier} not found.`;
+    },
+    CAPACITY_TOO_LOW: (studentCount) => {
+        return `there is already ${studentCount} student in this class, you can not change capacity to a number less than ${studentCount}`
     }
 });

@@ -73,10 +73,9 @@ export const ClassService = (() => {
                 next(error);
             }
         }
-
         /**
          * Adds students to a class by their IDs or national codes.
-         * Ensures that a student cannot be added to more than one class.
+         * Ensures that a student cannot be added to more than one class and the class is not full.
          * 
          * @async
          * @function
@@ -117,6 +116,16 @@ export const ClassService = (() => {
                         success: false,
                         message: ClassMsg.NOT_FOUND(classId),
                         errors: [{ message: ClassMsg.NOT_FOUND(classId), path: "not_found_classId" }]
+                    });
+                }
+
+                // Check if the class is full
+                const isFull = await this.#model.isClassFull(classId);
+                if (isFull) {
+                    return res.status(StatusCodes.BAD_REQUEST).json({
+                        success: false,
+                        message: "Class is full. Cannot add more students.",
+                        errors: [{ message: "Class is full", path: "class_capacity" }]
                     });
                 }
 
@@ -169,7 +178,6 @@ export const ClassService = (() => {
                 next(error);
             }
         }
-
 
         /**
          * Removes a student from a class and sets the classId to null.

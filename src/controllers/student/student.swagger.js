@@ -63,49 +63,124 @@
  *               type: string
  *               example: student
  *     CreateStudentRequest:
+ *       type: array
+ *       items:
+ *         type: object
+ *         properties:
+ *           first_name:
+ *             type: string
+ *             description: The first name of the student.
+ *           last_name:
+ *             type: string
+ *             description: The last name of the student.
+ *           national_code:
+ *             type: string
+ *             description: The national code of the student.
+ *           fatehr_name:
+ *             type: string
+ *             description: The name of the student's father.
+ *           fatehr_job:
+ *             type: string
+ *             description: The job of the student's father.
+ *           mother_job:
+ *             type: string
+ *             description: The job of the student's mother.
+ *           father_education:
+ *             type: string
+ *             description: The education level of the student's father.
+ *             enum: ["diplom", "bachelor", "master", "phd", "others"]
+ *           mother_education:
+ *             type: string
+ *             description: The education level of the student's mother.
+ *             enum: ["diplom", "bachelor", "master", "phd", "others"]
+ *           math_grade:
+ *             type: string
+ *             description: The math grade of the student.
+ *           avg_grade:
+ *             type: string
+ *             description: The average grade of the student.
+ *           discipline_grade:
+ *             type: string
+ *             description: The discipline grade of the student.
+ *           profilePicture:
+ *             type: string
+ *             format: binary
+ *             description: The profile picture file to upload.
+ *     CreateStudentsResponse:
  *       type: object
  *       properties:
- *         first_name:
- *           type: string
- *           description: The first name of the student.
- *         last_name:
- *           type: string
- *           description: The last name of the student.
- *         national_code:
- *           type: string
- *           description: The national code of the student.
- *         fatehr_name:
- *           type: string
- *           description: The name of the student's father.
- *         fatehr_job:
- *           type: string
- *           description: The job of the student's father.
- *         mother_job:
- *           type: string
- *           description: The job of the student's mother.
- *         father_education:
- *           type: string
- *           description: The education level of the student's father.
- *           enum: ["diplom", "bachelor", "master", "phd", "others"]
- *         mother_education:
- *           type: string
- *           description: The education level of the student's mother.
- *           enum: ["diplom", "bachelor", "master", "phd", "others"]
- *         math_grade:
- *           type: string
- *           description: The math grade of the student.
- *         avg_grade:
- *           type: string
- *           description: The average grade of the student.
- *         discipline_grade:
- *           type: string
- *           description: The discipline grade of the student.
- *         profilePicture:
- *           type: string
- *           format: binary
- *           description: The profile picture file to upload.
+ *         success:
+ *           type: boolean
+ *           example: true
+ *         students:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/Student'
+ *       required:
+ *         - success
+ *         - students
  */
 
+
+/**
+ * @swagger
+ * /students/bulk-create:
+ *   post:
+ *     summary: Create multiple new students
+ *     tags: [Students]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateStudentRequest'
+ *     responses:
+ *       201:
+ *         description: Students created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CreateStudentsResponse'
+ *       400:
+ *         description: Bad request due to validation errors
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 400
+ *                 message:
+ *                   type: string
+ *                   example: Validation Error
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       message:
+ *                         type: string
+ *                         example: "first_name is required"
+ *                       path:
+ *                         type: array
+ *                         items:
+ *                           type: string
+ *                           example: "first_name"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 500
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
 
 /**
  * @swagger
