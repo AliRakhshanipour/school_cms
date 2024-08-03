@@ -1,11 +1,11 @@
 export const FieldMsg = Object.freeze({
-    CREATED: (field, grade) => {
-        return `field: ${field} in grade: ${grade} created successfully`
-    },
-    NOT_FOUND: (fieldId) => {
-        return `no field found with this id: ${fieldId}`
-    },
-    DELETED: (fieldId) => {
-        return `field with id: ${fieldId} deleted successfully`
-    }
-})
+  CREATED: (field, grade) => {
+    return `field: ${field} in grade: ${grade} created successfully`;
+  },
+  NOT_FOUND: (fieldId) => {
+    return `no field found with this id: ${fieldId}`;
+  },
+  DELETED: (fieldId) => {
+    return `field with id: ${fieldId} deleted successfully`;
+  },
+});

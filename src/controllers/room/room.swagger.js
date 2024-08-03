@@ -42,7 +42,6 @@
  *         number: "202"
  */
 
-
 /**
  * @swagger
  * /rooms/create:
@@ -110,10 +109,9 @@
  *                   example: "Internal server error"
  */
 
-
 /**
  * @swagger
- * 
+ *
  * /rooms/{id}:
  *   get:
  *     summary: Retrieve a room by its ID
@@ -189,7 +187,6 @@
  *                   type: string
  *                   example: "Internal server error"
  */
-
 
 /**
  * @swagger
@@ -392,7 +389,6 @@
  *                   type: string
  *                   example: "Internal server error"
  */
-
 
 /**
  * @swagger

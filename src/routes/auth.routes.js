@@ -18,27 +18,21 @@ const { isAuthenticated, ensureRoles } = AuthorizeMiddleware;
  * @property {Array<Function>} handler - Array of handler functions for the route.
  */
 const authRoutes = [
-    {
-        method: 'post',
-        path: '/register',
-        handler: [
-            AuthService.register
-        ]
-    },
-    {
-        method: 'post',
-        path: '/verify-otp',
-        handler: [
-            AuthService.verifyOTP
-        ]
-    },
-    {
-        method: 'post',
-        path: '/login',
-        handler: [
-            AuthService.login
-        ]
-    },
+  {
+    method: 'post',
+    path: '/register',
+    handler: [AuthService.register],
+  },
+  {
+    method: 'post',
+    path: '/verify-otp',
+    handler: [AuthService.verifyOTP],
+  },
+  {
+    method: 'post',
+    path: '/login',
+    handler: [AuthService.login],
+  },
 ];
 
 /**

@@ -121,7 +121,6 @@
  *         - students
  */
 
-
 /**
  * @swagger
  * /students/bulk-create:
@@ -247,7 +246,6 @@
  *                   type: string
  *                   example: Internal server error
  */
-
 
 /**
  * @swagger
@@ -523,7 +521,6 @@
  *                   example: Internal server error
  */
 
-
 /**
  * @swagger
  * /students/{id}/update:
@@ -690,76 +687,75 @@
  */
 
 /**
-* @swagger
-* /students/{id}/delete:
-*   delete:
-*     summary: Delete a student by ID
-*     tags: [Students]
-*     parameters:
-*       - in: path
-*         name: id
-*         schema:
-*           type: integer
-*         required: true
-*         description: The user ID
-*         example: 1
-*     responses:
-*       204:
-*         description: Student deleted successfully
-*       404:
-*         description: Student not found
-*         content:
-*           application/json:
-*             schema:
-*               type: object
-*               properties:
-*                 status:
-*                   type: integer
-*                   example: 404
-*                 message:
-*                   type: string
-*                   example: Student not found
-*       401:
-*         description: Unauthorized - User is not authenticated.
-*         content:
-*           application/json:
-*             schema:
-*               type: object
-*               properties:
-*                 status:
-*                   type: integer
-*                   example: 401
-*                 message:
-*                   type: string
-*                   example: User is not authenticated.
-*       403:
-*         description: Forbidden - User does not have permission to delete this student.
-*         content:
-*           application/json:
-*             schema:
-*               type: object
-*               properties:
-*                 status:
-*                   type: integer
-*                   example: 403
-*                 message:
-*                   type: string
-*                   example: Access denied. You do not have permission to delete this Student.
-*       500:
-*         description: Internal server error
-*         content:
-*           application/json:
-*             schema:
-*               type: object
-*               properties:
-*                 status:
-*                   type: integer
-*                   example: 500
-*                 message:
-*                   type: string
-*                   example: Internal server error
-*/
-
+ * @swagger
+ * /students/{id}/delete:
+ *   delete:
+ *     summary: Delete a student by ID
+ *     tags: [Students]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The user ID
+ *         example: 1
+ *     responses:
+ *       204:
+ *         description: Student deleted successfully
+ *       404:
+ *         description: Student not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 404
+ *                 message:
+ *                   type: string
+ *                   example: Student not found
+ *       401:
+ *         description: Unauthorized - User is not authenticated.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 401
+ *                 message:
+ *                   type: string
+ *                   example: User is not authenticated.
+ *       403:
+ *         description: Forbidden - User does not have permission to delete this student.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 403
+ *                 message:
+ *                   type: string
+ *                   example: Access denied. You do not have permission to delete this Student.
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 500
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
 
 /**
  * @swagger
@@ -826,4 +822,3 @@
  *                   type: string
  *                   example: Internal server error
  */
-

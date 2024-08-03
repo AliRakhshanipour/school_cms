@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { registerRoutes } from '../utils/router-registrar.js';
-import { AuthorizeMiddleware } from '../middlewares/auth/auth.middlewares.js';
 import { SessionController } from '../controllers/session/session.controller.js';
+import { AuthorizeMiddleware } from '../middlewares/auth/auth.middlewares.js';
+import { registerRoutes } from '../utils/router-registrar.js';
 
 const router = Router();
 
@@ -18,45 +18,34 @@ const { isAuthenticated, ensureRoles } = AuthorizeMiddleware;
  * @property {Array<Function>} handler - Array of handler functions for the route.
  */
 const sessionRoutes = [
-    {
-        method: 'post',
-        path: '/create',
-        middlewares: [
-        ],
-        handler: [
-            SessionController.createSession
-        ]
-    },
-    {
-        method: 'get',
-        path: '/list',
-        handler: [
-            SessionController.getSessions
-        ]
-    },
-    {
-        method: 'get',
-        path: '/:id',
-        handler: [
-            SessionController.getSession
-        ]
-    },
-    {
-        method: 'patch',
-        path: '/:id/update',
-        middlewares: [
-        ],
-        handler: [
-        ]
-    },
-    {
-        method: 'delete',
-        path: '/:id/delete',
-        middlewares: [
-        ],
-        handler: [
-        ]
-    },
+  {
+    method: 'post',
+    path: '/create',
+    middlewares: [],
+    handler: [SessionController.createSession],
+  },
+  {
+    method: 'get',
+    path: '/list',
+    handler: [SessionController.getSessions],
+  },
+  {
+    method: 'get',
+    path: '/:id',
+    handler: [SessionController.getSession],
+  },
+  {
+    method: 'patch',
+    path: '/:id/update',
+    middlewares: [],
+    handler: [SessionController.updateSession],
+  },
+  {
+    method: 'delete',
+    path: '/:id/delete',
+    middlewares: [],
+    handler: [],
+  },
 ];
 
 /**

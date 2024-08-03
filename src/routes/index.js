@@ -1,13 +1,13 @@
 import { Router } from 'express';
-import userRoutes from './user.routes.js';
 import authRoutes from './auth.routes.js';
-import logRoutes from './log.routes.js';
-import studentRoutes from './student.routes.js';
-import fieldRoutes from './field.routes.js';
-import teacherRoutes from './teacher.routes.js';
-import roomRoutes from './room.routes.js';
 import classRoutes from './class.routes.js';
+import fieldRoutes from './field.routes.js';
+import logRoutes from './log.routes.js';
+import roomRoutes from './room.routes.js';
 import sessionRoutes from './session.routes.js';
+import studentRoutes from './student.routes.js';
+import teacherRoutes from './teacher.routes.js';
+import userRoutes from './user.routes.js';
 
 const router = Router();
 
@@ -26,22 +26,22 @@ const router = Router();
  * @const {Array<{path: string, router: Router}>}
  */
 const mainRoutes = [
-    { path: '/logs', router: logRoutes },
-    { path: '/users', router: userRoutes },
-    { path: '/auth', router: authRoutes },
-    { path: '/students', router: studentRoutes },
-    { path: '/fields', router: fieldRoutes },
-    { path: '/teachers', router: teacherRoutes },
-    { path: '/rooms', router: roomRoutes },
-    { path: '/classes', router: classRoutes },
-    { path: '/sessions', router: sessionRoutes },
+  { path: '/logs', router: logRoutes },
+  { path: '/users', router: userRoutes },
+  { path: '/auth', router: authRoutes },
+  { path: '/students', router: studentRoutes },
+  { path: '/fields', router: fieldRoutes },
+  { path: '/teachers', router: teacherRoutes },
+  { path: '/rooms', router: roomRoutes },
+  { path: '/classes', router: classRoutes },
+  { path: '/sessions', router: sessionRoutes },
 ];
 
 /**
  * Register each route with the main router.
  */
-mainRoutes.forEach(route => {
-    router.use(route.path, route.router);
+mainRoutes.forEach((route) => {
+  router.use(route.path, route.router);
 });
 
 export default router;

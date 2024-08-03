@@ -453,3 +453,137 @@
  *                   type: string
  *                   example: Internal server error
  */
+
+/**
+ * @swagger
+ * /sessions/{id}/update:
+ *   patch:
+ *     summary: Update specific fields of a session by ID
+ *     tags: [Sessions]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the session to be updated
+ *     requestBody:
+ *       content:
+ *         application/x-www-form-urlencoded:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               day:
+ *                 type: string
+ *                 enum: [Saturday, Sunday, Monday, Tuesday, Wednesday]
+ *                 description: The day of the week when the session occurs.
+ *               startTime:
+ *                 type: string
+ *                 description: The start time of the session in HH:mm format.
+ *                 pattern: '^([01]\\d|2[0-3]):([0-5]\\d)$'
+ *                 example: "08:00"
+ *               endTime:
+ *                 type: string
+ *                 description: The end time of the session in HH:mm format.
+ *                 pattern: '^([01]\\d|2[0-3]):([0-5]\\d)$'
+ *                 example: "10:00"
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               day:
+ *                 type: string
+ *                 enum: [Saturday, Sunday, Monday, Tuesday, Wednesday]
+ *                 description: The day of the week when the session occurs.
+ *               startTime:
+ *                 type: string
+ *                 description: The start time of the session in HH:mm format.
+ *                 pattern: '^([01]\\d|2[0-3]):([0-5]\\d)$'
+ *                 example: "08:00"
+ *               endTime:
+ *                 type: string
+ *                 description: The end time of the session in HH:mm format.
+ *                 pattern: '^([01]\\d|2[0-3]):([0-5]\\d)$'
+ *                 example: "10:00"
+ *       required: false
+ *     responses:
+ *       200:
+ *         description: Session updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Session updated successfully.
+ *                 session:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     roomId:
+ *                       type: integer
+ *                       example: 101
+ *                     day:
+ *                       type: string
+ *                       example: Monday
+ *                     startTime:
+ *                       type: string
+ *                       example: "09:00"
+ *                     endTime:
+ *                       type: string
+ *                       example: "10:00"
+ *                     classId:
+ *                       type: integer
+ *                       example: 202
+ *                     teacherId:
+ *                       type: integer
+ *                       example: 303
+ *                     lesson:
+ *                       type: string
+ *                       example: Math
+ *       400:
+ *         description: Bad request due to missing or invalid parameters
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: No valid fields provided for update.
+ *       404:
+ *         description: Session not found with the provided ID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Session not found with ID 1
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */

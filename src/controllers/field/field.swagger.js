@@ -13,7 +13,7 @@
  *             properties:
  *               title:
  *                 type: string
- *                 enum: 
+ *                 enum:
  *                   - 'برق ساختمان'
  *                   - 'نصب و تعمیر آسانسور'
  *                   - 'برق صنعتی'
@@ -23,7 +23,7 @@
  *                 type: string
  *               grade:
  *                 type: string
- *                 enum: 
+ *                 enum:
  *                   - 'دهم'
  *                   - 'یازدهم'
  *                   - 'دوازدهم'
@@ -117,7 +117,7 @@
  *         required: false
  *         schema:
  *           type: string
- *           enum: 
+ *           enum:
  *             - 'برق ساختمان'
  *             - 'نصب و تعمیر آسانسور'
  *             - 'برق صنعتی'
@@ -129,7 +129,7 @@
  *         required: false
  *         schema:
  *           type: string
- *           enum: 
+ *           enum:
  *             - 'دهم'
  *             - 'یازدهم'
  *             - 'دوازدهم'
@@ -185,7 +185,6 @@
  *                   type: string
  *                   example: Internal server error
  */
-
 
 /**
  * @swagger
@@ -258,7 +257,6 @@
  *                   example: Internal server error
  */
 
-
 /**
  * @swagger
  * /fields/{id}/update:
@@ -280,7 +278,7 @@
  *             properties:
  *               title:
  *                 type: string
- *                 enum: 
+ *                 enum:
  *                   - 'برق ساختمان'
  *                   - 'نصب و تعمیر آسانسور'
  *                   - 'برق صنعتی'
@@ -290,7 +288,7 @@
  *                 type: string
  *               grade:
  *                 type: string
- *                 enum: 
+ *                 enum:
  *                   - 'دهم'
  *                   - 'یازدهم'
  *                   - 'دوازدهم'
@@ -366,72 +364,72 @@
  */
 
 /**
-* @swagger
-* /fields/{id}/delete:
-*   delete:
-*     summary: Delete a field by ID
-*     tags: [Fields]
-*     parameters:
-*       - in: path
-*         name: id
-*         schema:
-*           type: integer
-*         required: true
-*         description: The field ID
-*         example: 1
-*     responses:
-*       204:
-*         description: Field deleted successfully
-*       404:
-*         description: Field not found
-*         content:
-*           application/json:
-*             schema:
-*               type: object
-*               properties:
-*                 status:
-*                   type: integer
-*                   example: 404
-*                 message:
-*                   type: string
-*                   example: Field not found
-*       401:
-*         description: Unauthorized - User is not authenticated.
-*         content:
-*           application/json:
-*             schema:
-*               type: object
-*               properties:
-*                 status:
-*                   type: integer
-*                   example: 401
-*                 message:
-*                   type: string
-*                   example: User is not authenticated.
-*       403:
-*         description: Forbidden - User does not have permission to delete this student.
-*         content:
-*           application/json:
-*             schema:
-*               type: object
-*               properties:
-*                 status:
-*                   type: integer
-*                   example: 403
-*                 message:
-*                   type: string
-*                   example: Access denied. You do not have permission to delete this Student.
-*       500:
-*         description: Internal server error
-*         content:
-*           application/json:
-*             schema:
-*               type: object
-*               properties:
-*                 status:
-*                   type: integer
-*                   example: 500
-*                 message:
-*                   type: string
-*                   example: Internal server error
-*/
+ * @swagger
+ * /fields/{id}/delete:
+ *   delete:
+ *     summary: Delete a field by ID
+ *     tags: [Fields]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The field ID
+ *         example: 1
+ *     responses:
+ *       204:
+ *         description: Field deleted successfully
+ *       404:
+ *         description: Field not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 404
+ *                 message:
+ *                   type: string
+ *                   example: Field not found
+ *       401:
+ *         description: Unauthorized - User is not authenticated.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 401
+ *                 message:
+ *                   type: string
+ *                   example: User is not authenticated.
+ *       403:
+ *         description: Forbidden - User does not have permission to delete this student.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 403
+ *                 message:
+ *                   type: string
+ *                   example: Access denied. You do not have permission to delete this Student.
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: integer
+ *                   example: 500
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */

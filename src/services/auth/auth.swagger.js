@@ -62,7 +62,6 @@
  *         description: Internal server error
  */
 
-
 /**
  * @swagger
  * /auth/verify-otp:
@@ -115,7 +114,6 @@
  *       500:
  *         description: Internal server error
  */
-
 
 /**
  * @swagger

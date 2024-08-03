@@ -1,8 +1,6 @@
 import { Router } from 'express';
-import { registerRoutes } from '../utils/router-registrar.js';
-import { UserController } from '../controllers/user/user.controller.js';
-import { UserService } from '../services/user/user.service.js';
 import { LogService } from '../services/log/log.service.js';
+import { registerRoutes } from '../utils/router-registrar.js';
 const router = Router();
 
 /**
@@ -15,8 +13,16 @@ const router = Router();
  * @property {Array} handler - Array of handler functions for the route.
  */
 const userRoutes = [
-    { method: 'get', path: '/activities', handler: [LogService.getAllActivities] },
-    { method: 'get', path: '/activities/user/:id', handler: [LogService.getActivitiesByUserId] },
+  {
+    method: 'get',
+    path: '/activities',
+    handler: [LogService.getAllActivities],
+  },
+  {
+    method: 'get',
+    path: '/activities/user/:id',
+    handler: [LogService.getActivitiesByUserId],
+  },
 ];
 
 /**
@@ -25,8 +31,8 @@ const userRoutes = [
  * This function iterates over the `userRoutes` array and registers each route with the corresponding HTTP method and path.
  * The `registerRoutes` utility function is used to handle the registration process.
  */
-userRoutes.forEach(route => {
-    router[route.method](route.path, ...route.handler);
+userRoutes.forEach((route) => {
+  router[route.method](route.path, ...route.handler);
 });
 
 // Register routes with the Express application

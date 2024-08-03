@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { registerRoutes } from '../utils/router-registrar.js';
-import { AuthorizeMiddleware } from '../middlewares/auth/auth.middlewares.js';
 import { RoomController } from '../controllers/room/room.controller.js';
+import { AuthorizeMiddleware } from '../middlewares/auth/auth.middlewares.js';
+import { registerRoutes } from '../utils/router-registrar.js';
 
 const router = Router();
 
@@ -18,61 +18,53 @@ const { isAuthenticated, ensureRoles } = AuthorizeMiddleware;
  * @property {Array} middlewares - Array of middleware functions to be applied to the route.
  */
 const roomRoutes = [
-    {
-        method: 'post',
-        path: '/create',
-        handler: [
-            RoomController.createRoom
-        ],
-        middlewares: [
-            // isAuthenticated,
-            // ensureRoles('admin') // Restrict access to admins
-        ]
-    },
-    {
-        method: 'get',
-        path: '/list',
-        handler: [
-            RoomController.getRooms
-        ],
-        middlewares: [
-            // isAuthenticated,
-            // ensureRoles('admin') // Restrict access to admins
-        ]
-    },
-    {
-        method: 'get',
-        path: '/:id',
-        handler: [
-            RoomController.getRoom
-        ],
-        middlewares: [
-            // isAuthenticated,
-            // ensureRoles('admin') // Restrict access to admins
-        ]
-    },
-    {
-        method: 'patch',
-        path: '/:id/update',
-        handler: [
-            RoomController.updateRoom
-        ],
-        middlewares: [
-            // isAuthenticated,
-            // ensureRoles('admin') 
-        ]
-    },
-    {
-        method: 'delete',
-        path: '/:id/delete',
-        handler: [
-            // RoomController.deleteRoom
-        ],
-        middlewares: [
-            // isAuthenticated,
-            // ensureRoles('admin')
-        ]
-    },
+  {
+    method: 'post',
+    path: '/create',
+    handler: [RoomController.createRoom],
+    middlewares: [
+      // isAuthenticated,
+      // ensureRoles('admin') // Restrict access to admins
+    ],
+  },
+  {
+    method: 'get',
+    path: '/list',
+    handler: [RoomController.getRooms],
+    middlewares: [
+      // isAuthenticated,
+      // ensureRoles('admin') // Restrict access to admins
+    ],
+  },
+  {
+    method: 'get',
+    path: '/:id',
+    handler: [RoomController.getRoom],
+    middlewares: [
+      // isAuthenticated,
+      // ensureRoles('admin') // Restrict access to admins
+    ],
+  },
+  {
+    method: 'patch',
+    path: '/:id/update',
+    handler: [RoomController.updateRoom],
+    middlewares: [
+      // isAuthenticated,
+      // ensureRoles('admin')
+    ],
+  },
+  {
+    method: 'delete',
+    path: '/:id/delete',
+    handler: [
+      // RoomController.deleteRoom
+    ],
+    middlewares: [
+      // isAuthenticated,
+      // ensureRoles('admin')
+    ],
+  },
 ];
 
 /**

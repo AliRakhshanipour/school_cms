@@ -133,10 +133,9 @@
  *                           path: 'title'
  */
 
-
 /**
  * @swagger
- * 
+ *
  * /classes/{id}:
  *   get:
  *     summary: Retrieve a class by its ID
@@ -484,7 +483,6 @@
  *                   example: "Internal server error"
  */
 
-
 /**
  * @swagger
  * /classes/{id}/change-capacity:
@@ -577,7 +575,6 @@
  *                   type: string
  *                   example: "Internal server error"
  */
-
 
 /**
  * @swagger

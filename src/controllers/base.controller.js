@@ -1,9 +1,9 @@
-import autoBind from "auto-bind";
+import autoBind from 'auto-bind';
 
 class BaseController {
-    constructor() {
-        autoBind(this);
-    }
+  constructor() {
+    autoBind(this);
+  }
 }
 
 export default BaseController;

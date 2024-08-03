@@ -1,5 +1,5 @@
-import { config } from "dotenv";
-import jwt from "jsonwebtoken";
+import { config } from 'dotenv';
+import jwt from 'jsonwebtoken';
 
 // Load environment variables from .env file
 config();
@@ -17,5 +17,5 @@ config();
  * console.log(token); // Example output: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
  */
 export const generateToken = (user) => {
-    return jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  return jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 };
