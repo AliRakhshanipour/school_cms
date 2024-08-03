@@ -1,10 +1,7 @@
 import autoBind from 'auto-bind';
 import { request, response } from 'express';
-import fs from 'fs';
 import { StatusCodes } from 'http-status-codes';
 import _ from 'lodash';
-import path from 'path';
-import { Op } from 'sequelize';
 import { sequelize } from '../../configs/database.conf.js';
 import { models } from '../../models/index.js';
 import { TeacherMsg } from './teacher.messages.js';
@@ -91,7 +88,6 @@ export const TeacherController = (() => {
         next(error); // Pass errors to the next middleware
       }
     }
-
     /**
      * Asynchronous function to get a list of teachers with optional filtering and pagination.
      *
@@ -102,65 +98,28 @@ export const TeacherController = (() => {
      */
     async getTeachers(req = request, res = response, next) {
       try {
-        // Extract query parameters for filtering and pagination
-        const {
-          page = 1,
-          limit = 10,
-          first_name,
-          last_name,
-          personal_code,
-          is_active,
-        } = req.query;
-
-        // Convert page and limit to integers
+        const { page = 1, limit = 10, ...filters } = req.query;
         const pageNumber = parseInt(page, 10);
         const pageSize = parseInt(limit, 10);
 
-        // Build the filter criteria
-        const where = {};
-        if (first_name) {
-          where.first_name = {
-            [Op.like]: `%${first_name}%`, // Use LIKE for partial matching
-          };
-        }
-        if (last_name) {
-          where.last_name = {
-            [Op.like]: `%${last_name}%`, // Use LIKE for partial matching
-          };
-        }
-        if (personal_code) {
-          where.personal_code = personal_code; // Exact match
-        }
-        if (is_active !== undefined) {
-          where.is_active = is_active === 'true'; // Convert string to boolean
-        }
-
-        // Fetch teachers with pagination, filtering, and image association
+        const where = this._buildFilterCriteria(filters);
         const { count, rows } = await this.#model.findAndCountAll({
           where,
           limit: pageSize,
           offset: (pageNumber - 1) * pageSize,
-          include: [
-            {
-              model: models.Image, // Assuming Image is the associated model
-              as: 'teacherPicture', // Use the alias defined in the association
-              attributes: ['url'], // Specify the attributes you want to return
-            },
-          ],
+          include: this._getImageInclude(),
         });
 
-        // Calculate total pages
         const totalPages = Math.ceil(count / pageSize);
 
-        // Return the response with teachers and pagination info
         res.status(StatusCodes.OK).json({
           success: true,
           data: rows,
           pagination: {
             totalItems: count,
-            totalPages: totalPages,
+            totalPages,
             currentPage: pageNumber,
-            pageSize: pageSize,
+            pageSize,
           },
         });
       } catch (error) {
@@ -178,37 +137,28 @@ export const TeacherController = (() => {
      */
     async getTeacher(req = request, res = response, next) {
       try {
-        // Extract the teacher ID from the request parameters
         const { id: teacherId } = req.params;
 
-        // Check if the teacher ID is provided
         if (!teacherId) {
-          return res.status(StatusCodes.BAD_REQUEST).json({
-            success: false,
-            message: TeacherMsg.TEACHER_ID_REQUIRED(),
-          });
+          return this._sendErrorResponse(
+            res,
+            StatusCodes.BAD_REQUEST,
+            TeacherMsg.TEACHER_ID_REQUIRED()
+          );
         }
 
-        // Fetch the teacher from the database by ID
         const teacher = await this.#model.findByPk(teacherId, {
-          include: [
-            {
-              model: models.Image, // Assuming Image is the associated model
-              as: 'teacherPicture', // Use the alias defined in the association
-              attributes: ['url'], // Specify the attributes you want to return
-            },
-          ],
+          include: this._getImageInclude(),
         });
 
-        // Check if the teacher exists
         if (!teacher) {
-          return res.status(StatusCodes.NOT_FOUND).json({
-            success: false,
-            message: TeacherMsg.NOT_FOUND(teacherId),
-          });
+          return this._sendErrorResponse(
+            res,
+            StatusCodes.NOT_FOUND,
+            TeacherMsg.NOT_FOUND(teacherId)
+          );
         }
 
-        // Return the found teacher
         res.status(StatusCodes.OK).json({
           success: true,
           data: teacher,
@@ -232,14 +182,11 @@ export const TeacherController = (() => {
 
       try {
         const { id: teacherId } = req.params;
-
-        // Extract update data and omit null or empty values
         const updateData = _.omitBy(
           req.body,
           (value) => _.isNil(value) || value === ''
         );
 
-        // Find the teacher
         const teacher = await this.#model.findOne({
           where: { id: teacherId },
           transaction,
@@ -247,68 +194,29 @@ export const TeacherController = (() => {
 
         if (!teacher) {
           await transaction.rollback();
-          return res.status(StatusCodes.NOT_FOUND).json({
-            success: false,
-            message: `Teacher with ID ${teacherId} not found.`,
-            errors: [
-              {
-                message: `Teacher with ID ${teacherId} not found.`,
-                path: ['teacher_id'],
-              },
-            ],
-          });
-        }
-
-        // Handle profile picture update
-        if (req.file) {
-          // Delete the current profile picture if it exists
-          const currentImage = await this.#imageModel.findOne({
-            where: { imageableId: teacherId, imageableType: 'teacher' },
-            transaction,
-          });
-
-          if (currentImage) {
-            // Remove the file from the server
-            const imagePath = path.join(
-              process.cwd(),
-              'public',
-              currentImage.url
-            );
-            fs.unlinkSync(imagePath);
-
-            // Remove the image record from the database
-            await currentImage.destroy({ transaction });
-          }
-
-          // Save the new profile picture
-          const { path: filePath } = req.file;
-          const newImage = await this.#imageModel.create(
-            {
-              title: `teacher-pic-${teacherId}`,
-              url: filePath.replace(process.cwd() + '/public', ''),
-              imageableId: teacherId,
-              imageableType: 'teacher',
-            },
-            { transaction }
+          return this._sendErrorResponse(
+            res,
+            StatusCodes.NOT_FOUND,
+            `Teacher with ID ${teacherId} not found.`
           );
-
-          // Associate the new image with the teacher
-          await teacher.setTeacherPicture(newImage, { transaction });
         }
 
-        // Update teacher record
-        await teacher.update(updateData, { transaction });
+        if (req.file) {
+          await this._handleProfilePictureUpdate(
+            req.file,
+            teacherId,
+            transaction
+          );
+        }
 
-        // Commit the transaction
+        await teacher.update(updateData, { transaction });
         await transaction.commit();
 
-        // Respond with the updated teacher data
         res.status(StatusCodes.OK).json({
           success: true,
-          teacher,
+          data: teacher,
         });
       } catch (error) {
-        // Rollback the transaction in case of error
         await transaction.rollback();
         next(error);
       }
@@ -329,7 +237,6 @@ export const TeacherController = (() => {
       try {
         const { id: teacherId } = req.params;
 
-        // Find the teacher
         const teacher = await this.#model.findOne({
           where: { id: teacherId },
           transaction,
@@ -337,50 +244,22 @@ export const TeacherController = (() => {
 
         if (!teacher) {
           await transaction.rollback();
-          return res.status(StatusCodes.NOT_FOUND).json({
-            success: false,
-            message: `Teacher with ID ${teacherId} not found.`,
-            errors: [
-              {
-                message: `Teacher with ID ${teacherId} not found.`,
-                path: ['teacher_id'],
-              },
-            ],
-          });
-        }
-
-        // Find the current profile picture if it exists
-        const currentImage = await this.#imageModel.findOne({
-          where: { imageableId: teacherId, imageableType: 'teacher' },
-          transaction,
-        });
-
-        if (currentImage) {
-          // Remove the file from the server
-          const imagePath = path.join(
-            process.cwd(),
-            'public',
-            currentImage.url
+          return this._sendErrorResponse(
+            res,
+            StatusCodes.NOT_FOUND,
+            `Teacher with ID ${teacherId} not found.`
           );
-          fs.unlinkSync(imagePath);
-
-          // Remove the image record from the database
-          await currentImage.destroy({ transaction });
         }
 
-        // Delete the teacher record
+        await this._handleProfilePictureDeletion(teacherId, transaction);
         await teacher.destroy({ transaction });
-
-        // Commit the transaction
         await transaction.commit();
 
-        // Respond with success message
         res.status(StatusCodes.OK).json({
           success: true,
           message: `Teacher with ID ${teacherId} has been deleted.`,
         });
       } catch (error) {
-        // Rollback the transaction in case of error
         await transaction.rollback();
         next(error);
       }
@@ -465,6 +344,117 @@ export const TeacherController = (() => {
       );
 
       await teacher.setTeacherPicture(image, { transaction });
+    }
+
+    /**
+     * Build filter criteria for querying teachers.
+     *
+     * @param {Object} filters - The filters extracted from the query.
+     * @returns {Object} - The filter criteria.
+     */
+    _buildFilterCriteria(filters) {
+      const where = {};
+
+      if (filters.first_name) {
+        where.first_name = { [Op.like]: `%${filters.first_name}%` };
+      }
+      if (filters.last_name) {
+        where.last_name = { [Op.like]: `%${filters.last_name}%` };
+      }
+      if (filters.personal_code) {
+        where.personal_code = filters.personal_code;
+      }
+      if (filters.is_active !== undefined) {
+        where.is_active = filters.is_active === 'true';
+      }
+
+      return where;
+    }
+
+    /**
+     * Get image association include options.
+     *
+     * @returns {Array} - The include options for image association.
+     */
+    _getImageInclude() {
+      return [
+        {
+          model: models.Image,
+          as: 'teacherPicture',
+          attributes: ['url'],
+        },
+      ];
+    }
+
+    /**
+     * Handle profile picture update logic.
+     *
+     * @param {Object} file - The uploaded file object.
+     * @param {number} teacherId - The ID of the teacher being updated.
+     * @param {Object} transaction - The transaction object.
+     * @returns {Promise<void>}
+     */
+    async _handleProfilePictureUpdate(file, teacherId, transaction) {
+      const currentImage = await this.#imageModel.findOne({
+        where: { imageableId: teacherId, imageableType: 'teacher' },
+        transaction,
+      });
+
+      if (currentImage) {
+        const imagePath = path.join(process.cwd(), 'public', currentImage.url);
+        fs.unlinkSync(imagePath);
+        await currentImage.destroy({ transaction });
+      }
+
+      const { path: filePath } = file;
+      const newImage = await this.#imageModel.create(
+        {
+          title: `teacher-pic-${teacherId}`,
+          url: filePath.replace(process.cwd() + '/public', ''),
+          imageableId: teacherId,
+          imageableType: 'teacher',
+        },
+        { transaction }
+      );
+
+      await this.#model
+        .findByPk(teacherId, { transaction })
+        .setTeacherPicture(newImage, { transaction });
+    }
+
+    /**
+     * Handle profile picture deletion logic.
+     *
+     * @param {number} teacherId - The ID of the teacher being deleted.
+     * @param {Object} transaction - The transaction object.
+     * @returns {Promise<void>}
+     */
+    async _handleProfilePictureDeletion(teacherId, transaction) {
+      const currentImage = await this.#imageModel.findOne({
+        where: { imageableId: teacherId, imageableType: 'teacher' },
+        transaction,
+      });
+
+      if (currentImage) {
+        const imagePath = path.join(process.cwd(), 'public', currentImage.url);
+        fs.unlinkSync(imagePath);
+        await currentImage.destroy({ transaction });
+      }
+    }
+
+    /**
+     * Send error response with appropriate status and message.
+     *
+     * @param {Object} res - The response object.
+     * @param {number} statusCode - The HTTP status code.
+     * @param {string} message - The error message.
+     * @returns {Object} - The response object.
+     */
+    _sendErrorResponse(res, statusCode, message) {
+      return res.status(statusCode).json({
+        success: false,
+        message,
+      });
     }
   }
   return new TeacherController();
