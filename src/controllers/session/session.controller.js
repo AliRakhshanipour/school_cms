@@ -335,7 +335,6 @@ export const SessionController = (() => {
       }
     }
 
-    // BUG method returns this -> "invalid input syntax for type time: \"\""
     /**
      * Updates specific fields of a session by ID.
      *
@@ -360,12 +359,16 @@ export const SessionController = (() => {
         // Define the allowed fields for update
         const allowedFields = ['day', 'startTime', 'endTime'];
         const updateData = _.pick(req.body, allowedFields);
+        const updatedDataCleared = _.omitBy(
+          updateData,
+          (value) => _.isNil(value) || value === ''
+        );
 
         // Check if any update data is provided
-        if (_.isEmpty(updateData)) {
+        if (_.isEmpty(updatedDataCleared)) {
           return res.status(StatusCodes.BAD_REQUEST).json({
             success: false,
-            message: 'No valid fields provided for update.',
+            message: SessionMsg.NO_VALID_FIELDS_UPDATE(),
           });
         }
 
@@ -376,18 +379,18 @@ export const SessionController = (() => {
         if (!session) {
           return res.status(StatusCodes.NOT_FOUND).json({
             success: false,
-            message: `Session not found with ID ${sessionId}.`,
+            message: SessionMsg.NOT_FOUND(sessionId),
           });
         }
 
         // Update the session with the provided data
-        await session.update(updateData);
+        await session.update(updatedDataCleared);
         await session.save();
 
         // Respond with success and updated session data
         res.status(StatusCodes.OK).json({
           success: true,
-          message: `Session updated successfully.`,
+          message: SessionMsg.UPDATED_SUCCESS(sessionId),
           session,
         });
       } catch (error) {
@@ -395,9 +398,59 @@ export const SessionController = (() => {
       }
     }
 
-    // TODO deleteSession
-    async deleteSession(req = request, res = response, next) {}
+    /**
+     * Deletes a session by ID.
+     *
+     * @async
+     * @param {Object} req - Express request object.
+     * @param {Object} res - Express response object.
+     * @param {Function} next - Express next middleware function.
+     * @returns {Promise<void>}
+     */
+    async deleteSession(req = request, res = response, next) {
+      try {
+        const { id: sessionId } = req.params;
 
+        // Check if sessionId is provided
+        if (!sessionId) {
+          return res.status(StatusCodes.BAD_REQUEST).json({
+            success: false,
+            message: SessionMsg.REQUIRED_SESSION_ID(),
+          });
+        }
+
+        // Find the session by ID
+        const session = await this.#model.findByPk(sessionId);
+
+        // Check if the session exists
+        if (!session) {
+          return res.status(StatusCodes.NOT_FOUND).json({
+            success: false,
+            message: SessionMsg.NOT_FOUND(sessionId),
+          });
+        }
+
+        await session.destroy();
+
+        res.status(StatusCodes.OK).json({
+          success: true,
+          message: SessionMsg.DELETED(sessionId),
+        });
+      } catch (error) {
+        next(error);
+      }
+    }
+
+    /**
+     * Validates required inputs for session creation.
+     *
+     * @param {Object} params - The input parameters for validation.
+     * @param {number} params.roomId - The ID of the room.
+     * @param {string} params.day - The day of the session.
+     * @param {string} params.startTime - The start time of the session.
+     * @param {string} params.endTime - The end time of the session.
+     * @returns {Object[]} - An array of error messages for missing fields.
+     */
     #validateInputs({ roomId, day, startTime, endTime }) {
       const missingFields = [];
       if (!roomId) missingFields.push('roomId');
@@ -411,6 +464,12 @@ export const SessionController = (() => {
       }));
     }
 
+    /**
+     * Validates if the provided day is one of the allowed days.
+     *
+     * @param {string} day - The day of the session.
+     * @returns {Object|null} - Error object if day is invalid; otherwise, null.
+     */
     #validateDay(day) {
       const validDays = [
         'Saturday',
@@ -429,6 +488,13 @@ export const SessionController = (() => {
       return null;
     }
 
+    /**
+     * Validates if the provided time slot is in the correct format.
+     *
+     * @param {string} startTime - The start time of the session.
+     * @param {string} endTime - The end time of the session.
+     * @returns {Object|null} - Error object if time slot is invalid; otherwise, null.
+     */
     #validateTimeSlot(startTime, endTime) {
       const timeSlotPattern =
         /^([01]\d|2[0-3]):([0-5]\d)-([01]\d|2[0-3]):([0-5]\d)$/;
@@ -444,6 +510,15 @@ export const SessionController = (() => {
       return null;
     }
 
+    /**
+     * Checks if there is any overlapping session in the same room.
+     *
+     * @param {number} roomId - The ID of the room.
+     * @param {string} day - The day of the session.
+     * @param {string} startTime - The start time of the session.
+     * @param {string} endTime - The end time of the session.
+     * @returns {Promise<Object|null>} - A session object if overlap detected; otherwise, null.
+     */
     async #checkSessionOverlapInRoom(roomId, day, startTime, endTime) {
       return this.#model.findOne({
         where: {
@@ -465,6 +540,12 @@ export const SessionController = (() => {
       });
     }
 
+    /**
+     * Checks if a class exists by ID.
+     *
+     * @param {number} classId - The ID of the class.
+     * @returns {Promise<Object|null>} - Error object if class not found; otherwise, null.
+     */
     async #checkClassExistence(classId) {
       if (classId) {
         const classInstance = await this.#classModel.findByPk(classId);
@@ -481,6 +562,12 @@ export const SessionController = (() => {
       return null;
     }
 
+    /**
+     * Checks if a teacher exists by ID.
+     *
+     * @param {number} teacherId - The ID of the teacher.
+     * @returns {Promise<Object|null>} - Error object if teacher not found; otherwise, null.
+     */
     async #checkTeacherExistence(teacherId) {
       if (teacherId) {
         const teacher = await this.#teacherModel.findByPk(teacherId);
@@ -500,6 +587,15 @@ export const SessionController = (() => {
       return null;
     }
 
+    /**
+     * Checks for overlap in teacher's schedule.
+     *
+     * @param {number} teacherId - The ID of the teacher.
+     * @param {string} day - The day of the session.
+     * @param {string} startTime - The start time of the session.
+     * @param {string} endTime - The end time of the session.
+     * @returns {Promise<Object|null>} - Error object if overlap detected; otherwise, null.
+     */
     async #checkTeacherOverlap(teacherId, day, startTime, endTime) {
       if (teacherId) {
         const existingSessionForTeacher = await this.#model.findOne({
@@ -537,6 +633,19 @@ export const SessionController = (() => {
       return null;
     }
 
+    /**
+     * Creates a new session with the provided details.
+     *
+     * @param {Object} sessionData - The data for the new session.
+     * @param {number} sessionData.roomId - The ID of the room.
+     * @param {string} sessionData.day - The day of the session.
+     * @param {string} sessionData.startTime - The start time of the session.
+     * @param {string} sessionData.endTime - The end time of the session.
+     * @param {number} [sessionData.classId] - The ID of the class (optional).
+     * @param {number} [sessionData.teacherId] - The ID of the teacher (optional).
+     * @param {string} [sessionData.lesson] - The lesson description (optional).
+     * @returns {Promise<Object>} - The newly created session object.
+     */
     async #createNewSession({
       roomId,
       day,

@@ -1,5 +1,5 @@
 export const SessionMsg = Object.freeze({
-  NOT_FOUND: (sessionId) => `Session not found with ID: ${sessionId}`,
+  NOT_FOUND: (sessionId) => `Session not found with ID ${sessionId}`,
   CREATED_SUCCESS: (sessionId) =>
     `Session with ID ${sessionId} created successfully.`,
   OVERLAP_DETECTED: () =>
@@ -21,4 +21,6 @@ export const SessionMsg = Object.freeze({
     `this teacher: ${teacherId} has already a session in this slot time, choose another teacher`,
   REQUIRED_SESSION_ID: () => `Session ID is required`,
   UPDATED_SUCCESS: (id) => `session ${id} updated successfully`,
+  NO_VALID_FIELDS_UPDATE: () => `No valid fields provided for update`,
+  DELETED: (sessionId) => `Session with ID ${sessionId} has been deleted.`,
 });

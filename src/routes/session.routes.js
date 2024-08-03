@@ -44,7 +44,7 @@ const sessionRoutes = [
     method: 'delete',
     path: '/:id/delete',
     middlewares: [],
-    handler: [],
+    handler: [SessionController.deleteSession],
   },
 ];
 
