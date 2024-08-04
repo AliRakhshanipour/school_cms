@@ -13,9 +13,8 @@ import mainRoutes from './src/routes/index.js';
  * Initialize and start the Express server.
  * Handles middleware, error handling, database connection, and server startup.
  */
+export const app = express();
 const startServer = async () => {
-  const app = express();
-
   // Start DB connection
   try {
     await connectMongoDB(); // Connect to MongoDB if using it

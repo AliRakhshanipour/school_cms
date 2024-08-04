@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { SessionController } from '../controllers/session/session.controller.js';
 import { AuthorizeMiddleware } from '../middlewares/auth/auth.middlewares.js';
+import { SessionService } from '../services/session/session.service.js';
 import { registerRoutes } from '../utils/router-registrar.js';
 
 const router = Router();
@@ -33,6 +34,12 @@ const sessionRoutes = [
     method: 'get',
     path: '/:id',
     handler: [SessionController.getSession],
+  },
+  {
+    method: 'patch',
+    path: '/:id/change-teacher',
+    middlewares: [],
+    handler: [SessionService.changeTeacherSession], // Updated to use SessionController
   },
   {
     method: 'patch',

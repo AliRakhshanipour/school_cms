@@ -3,88 +3,79 @@ import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { fileURLToPath } from 'url';
 
-// Determine the filename and directory name of the current module
+// Resolve the current directory path by using a relative path or setting an environment variable
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+console.log(__dirname);
+
+// Use a project root directory or configure the path based on your needs
+const projectRoot = path.resolve(); // This should be the root directory of your project
 
 // Array of API paths to include in the Swagger documentation
 const apiPaths = [
-  path.join(__dirname, '..', 'controllers', '**', '*.swagger.js'), // Paths for controller Swagger comments
-  path.join(__dirname, '..', 'services', '**', '*.swagger.js'), // Paths for service Swagger comments
-  path.join(__dirname, '..', 'log', '**', '*.swagger.js'), // Paths for logger Swagger comments
-  path.join(__dirname, '..', 'log', '*.swagger.js'), // Paths for logger Swagger comments
+  path.join(__dirname, '..', 'controllers', '**', '*.swagger.js'),
+  path.join(__dirname, '..', 'services', '**', '*.swagger.js'),
+  path.join(__dirname, '..', 'log', '**', '*.swagger.js'),
+  path.join(__dirname, '..', 'log', '*.swagger.js'),
 ];
 
 // Swagger definition
 const swaggerDefinition = {
-  openapi: '3.0.0', // OpenAPI version
+  openapi: '3.0.0',
   info: {
-    title: 'School CMS API Documentation', // Title of the API documentation
-    version: '1.0.0', // Version of the API
-    description: 'REST API documentation for the School CMS project.', // Brief description of the API
+    title: 'School CMS API Documentation',
+    version: '1.0.0',
+    description: 'REST API documentation for the School CMS project.',
   },
   servers: [
     {
-      url: `http://localhost:${process.env.PORT || 3000}`, // Base URL for the API
-      description: 'Development server', // Description of the server environment
+      url: `http://localhost:${process.env.PORT || 3000}`,
+      description: 'Development server',
     },
   ],
   components: {
     securitySchemes: {
       JwtAuth: {
-        type: 'http', // Authentication type
-        scheme: 'bearer', // Scheme for bearer tokens
-        bearerFormat: 'JWT', // Format for the bearer token
-        description: 'JWT authentication using bearer tokens', // Description of the JWT authentication method
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        description: 'JWT authentication using bearer tokens',
       },
     },
   },
   security: [
     {
-      JwtAuth: [], // Applies JWT authentication to all endpoints by default
+      JwtAuth: [],
     },
   ],
   tags: [
-    // Define tags for organizing endpoints
     {
-      name: 'Authentication', // Tag for authentication-related endpoints
-      description: 'Endpoints related to authentication and authorization', // Description of the Auth tag
+      name: 'Authentication',
+      description: 'Endpoints related to authentication and authorization',
     },
+    { name: 'Users', description: 'Endpoints related to user operations' },
+    { name: 'Rooms', description: 'Endpoints related to room operations' },
     {
-      name: 'Users', // Tag for user-related endpoints
-      description: 'Endpoints related to user operations', // Description of the Users tag
+      name: 'Sessions',
+      description: 'Endpoints related to session operations',
     },
+    { name: 'Classes', description: 'Endpoints related to class operations' },
     {
-      name: 'Rooms', // Tag for room-related endpoints
-      description: 'Endpoints related to room operations', // Description of the Rooms tag
+      name: 'Students',
+      description: 'Endpoints related to student operations',
     },
+    { name: 'Fields', description: 'Endpoints related to field operations' },
     {
-      name: 'Sessions', // Tag for session-related endpoints
-      description: 'Endpoints related to session operations', // Description of the Sessions tag
-    },
-    {
-      name: 'Classes', // Tag for class-related endpoints
-      description: 'Endpoints related to class operations', // Description of the Classes tag
-    },
-    {
-      name: 'Students', // Tag for student-related endpoints
-      description: 'Endpoints related to student operations', // Description of the Students tag
-    },
-    {
-      name: 'Fields', // Tag for field-related endpoints
-      description: 'Endpoints related to field operations', // Description of the Fields tag
-    },
-    {
-      name: 'Teachers', // Tag for teacher-related endpoints
-      description: 'Endpoints related to teacher operations', // Description of the Teachers tag
+      name: 'Teachers',
+      description: 'Endpoints related to teacher operations',
     },
   ],
 };
 
 // Options for Swagger documentation setup
 const options = {
-  swaggerDefinition, // Swagger definition containing metadata and security information
-  apis: apiPaths, // Paths to the files containing Swagger comments
+  swaggerDefinition,
+  apis: apiPaths,
 };
 
 // Initialize swagger-jsdoc to generate Swagger documentation based on the defined options
@@ -92,17 +83,12 @@ const swaggerSpec = swaggerJsdoc(options);
 
 // Function to setup Swagger UI and other documentation endpoints
 const setupSwagger = (app) => {
-  // Serve Swagger UI at /api-docs endpoint
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-  // Serve Swagger JSON at /swagger.json endpoint
   app.get('/swagger.json', (req, res) => {
     res.json(swaggerSpec);
   });
-
-  // Serve ReDoc documentation at /redoc endpoint
   app.get('/redoc', (req, res) => {
-    res.sendFile(path.join(__dirname, 'redoc.html')); // Serve the ReDoc documentation from an HTML file
+    res.sendFile(path.join(projectRoot, 'redoc.html'));
   });
 };
 

@@ -23,4 +23,5 @@ export const SessionMsg = Object.freeze({
   UPDATED_SUCCESS: (id) => `session ${id} updated successfully`,
   NO_VALID_FIELDS_UPDATE: () => `No valid fields provided for update`,
   DELETED: (sessionId) => `Session with ID ${sessionId} has been deleted.`,
+  REQUIRED_TEACHER_ID: () => `teacher id is required`,
 });
