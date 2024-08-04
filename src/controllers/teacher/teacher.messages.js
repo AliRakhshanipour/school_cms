@@ -6,4 +6,6 @@ export const TeacherMsg = Object.freeze({
     `The personal code ${personal_code} already exists`,
   TEACHER_ID_REQUIRED: 'Teacher ID is required',
   NOT_FOUND: (id) => `Teacher with ID ${id} not found`,
+  SESSION_NOT_FOUND: (teacherId) =>
+    `no session found for this teacher ID: ${teacherId}`,
 });

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { TeacherController } from '../controllers/teacher/teacher.controller.js';
 import { AuthorizeMiddleware } from '../middlewares/auth/auth.middlewares.js';
+import { TeacherService } from '../services/teacher/teacher.service.js';
 import profileUploader from '../utils/multer.js';
 import { registerRoutes } from '../utils/router-registrar.js';
 
@@ -66,6 +67,13 @@ const teacherRoutes = [
     ],
     handler: [
       TeacherController.deleteTeacher, // Controller method to handle teacher deletion
+    ],
+  },
+  {
+    method: 'get',
+    path: '/:id/sessions',
+    handler: [
+      TeacherService.getSessions, // Controller method to handle retrieval of teachers list
     ],
   },
 ];

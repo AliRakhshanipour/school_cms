@@ -498,3 +498,105 @@
  *                   type: string
  *                   example: "Internal server error"
  */
+
+/**
+ * @swagger
+ * /teachers/{id}/sessions:
+ *   get:
+ *     summary: Retrieve all sessions for a specific teacher
+ *     tags: [Teachers]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The unique identifier of the teacher whose sessions are to be retrieved.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved the sessions for the specified teacher.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 sessions:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                         description: The unique identifier of the session.
+ *                         example: "1"
+ *                       day:
+ *                         type: string
+ *                         description: The day of the week when the session occurs.
+ *                         example: "Monday"
+ *                       startTime:
+ *                         type: string
+ *                         format: time
+ *                         description: The start time of the session.
+ *                         example: "08:00:00"
+ *                       endTime:
+ *                         type: string
+ *                         format: time
+ *                         description: The end time of the session.
+ *                         example: "10:00:00"
+ *                       class:
+ *                         type: object
+ *                         properties:
+ *                           number:
+ *                             type: string
+ *                             description: The number of the class associated with the session.
+ *                             example: "101"
+ *                       room:
+ *                         type: object
+ *                         properties:
+ *                           number:
+ *                             type: string
+ *                             description: The number of the room where the session takes place.
+ *                             example: "A1"
+ *       400:
+ *         description: Bad request due to missing required parameters.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Teacher ID is required.
+ *       404:
+ *         description: Not found, no sessions found for the provided teacher ID.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: No sessions found for teacher with ID {id}.
+ *       500:
+ *         description: Internal server error if something goes wrong during the retrieval process.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
