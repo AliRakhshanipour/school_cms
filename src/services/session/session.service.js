@@ -1,5 +1,6 @@
 import { request, response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import { RoomMsg } from '../../controllers/room/room.messages.js';
 import { SessionMsg } from '../../controllers/session/session.messages.js';
 import { models } from '../../models/index.js';
 import BaseService from '../base.service.js';
@@ -64,9 +65,45 @@ export const SessionService = (() => {
       }
     }
 
-    // TODO changeRoomSession
     async changeRoomSession(req = request, res = response, next) {
       try {
+        const { id: sessionId } = req.params;
+        const { roomId } = req.body;
+
+        if (!sessionId) {
+          res.status(StatusCodes.BAD_REQUEST).json({
+            success: false,
+            message: SessionMsg.REQUIRED_SESSION_ID(),
+          });
+        }
+
+        if (!roomId) {
+          res
+            .status(StatusCodes.BAD_REQUEST)
+            .json({ success: false, message: SessionMsg.REQUIRED_ROOM_ID() });
+        }
+
+        const session = await this.#model.findByPk(sessionId);
+        if (!session) {
+          res.status(StatusCodes.NOT_FOUND).json({
+            success: false,
+            message: SessionMsg.NOT_FOUND(sessionId),
+          });
+        }
+
+        (await this.#roomModel.findByPk(roomId)) ||
+          res.status(StatusCodes.NOT_FOUND).json({
+            success: false,
+            message: RoomMsg.NOT_FOUND(roomId),
+          });
+
+        await session.update({ roomId });
+        await session.save();
+
+        res.status(StatusCodes.OK).json({
+          success: true,
+          message: SessionMsg.UPDATED_SUCCESS(sessionId),
+        });
       } catch (error) {
         next(error);
       }

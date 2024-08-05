@@ -39,7 +39,13 @@ const sessionRoutes = [
     method: 'patch',
     path: '/:id/change-teacher',
     middlewares: [],
-    handler: [SessionService.changeTeacherSession], // Updated to use SessionController
+    handler: [SessionService.changeTeacherSession],
+  },
+  {
+    method: 'patch',
+    path: '/:id/change-room',
+    middlewares: [],
+    handler: [SessionService.changeRoomSession],
   },
   {
     method: 'patch',
