@@ -1,5 +1,6 @@
 import { sequelize } from '../configs/database.conf.js';
 import setupAssociations from '../utils/associate-models.js';
+import { initAttendance } from './attendance.model.js';
 
 // Import model initialization functions
 import { initClass } from './class.model.js';
@@ -25,6 +26,7 @@ import { initUser } from './user.model.js';
  * @property {Object} Room - The initialized Room model.
  * @property {Object} Class - The initialized Class model.
  * @property {Object} Session - The initialized Session model.
+ * @property {Object} Attendance - The initialized Attendance model.
  *
  * @example
  * import { models } from './path/to/models';
@@ -41,6 +43,7 @@ export const models = {
   Room: initRoom(sequelize), // Initialize the Room model
   Class: initClass(sequelize), // Initialize the Class model
   Session: initSession(sequelize), // Initialize the Session model
+  Attendance: initAttendance(sequelize), // Initialize the Attendance model
 };
 
 // Setup model associations
