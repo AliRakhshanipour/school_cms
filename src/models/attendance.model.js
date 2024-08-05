@@ -16,6 +16,8 @@ class Attendance extends Model {
   }
 }
 
+const ATTENDANCE_STATUS = ['present', 'delay', 'absent'];
+
 export const initAttendance = (sequelize) => {
   Attendance.init(
     {
@@ -31,6 +33,16 @@ export const initAttendance = (sequelize) => {
       sessionId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+      },
+      status: {
+        type: DataTypes.ENUM,
+        values: ATTENDANCE_STATUS,
+        validate: {
+          isIn: {
+            args: [ATTENDANCE_STATUS],
+            msg: `status must be one of 'present' , 'delay' , 'absent'`,
+          },
+        },
       },
     },
     {
