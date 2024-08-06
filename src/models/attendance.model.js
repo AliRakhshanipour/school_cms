@@ -40,9 +40,18 @@ export const initAttendance = (sequelize) => {
         validate: {
           isIn: {
             args: [ATTENDANCE_STATUS],
-            msg: `status must be one of 'present' , 'delay' , 'absent'`,
+            msg: `status must be one of 'present', 'delay', 'absent'`,
           },
         },
+      },
+      date: {
+        type: DataTypes.DATEONLY,
+        allowNull: true,
+        defaultValue: DataTypes.NOW,
+      },
+      delayMinutes: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
       },
     },
     {

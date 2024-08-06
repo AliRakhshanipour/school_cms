@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { AttendanceController } from '../controllers/attendance/attendance.controller.js';
 import { registerRoutes } from '../utils/router-registrar.js';
 
 const router = Router();
@@ -18,7 +19,7 @@ const attendanceRoutes = [
     method: 'post',
     path: '/create',
     middlewares: [],
-    handler: [],
+    handler: [AttendanceController.createAttendance],
   },
   {
     method: 'get',
@@ -28,7 +29,7 @@ const attendanceRoutes = [
   {
     method: 'get',
     path: '/:id',
-    handler: [],
+    handler: [AttendanceController.getAttendance],
   },
   {
     method: 'patch',

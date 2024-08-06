@@ -69,6 +69,10 @@ const swaggerDefinition = {
       name: 'Teachers',
       description: 'Endpoints related to teacher operations',
     },
+    {
+      name: 'Attendances',
+      description: 'Endpoints related to attendance operations',
+    },
   ],
 };
 

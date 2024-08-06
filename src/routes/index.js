@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import attendanceRoutes from './attendance.routes.js';
 import authRoutes from './auth.routes.js';
 import classRoutes from './class.routes.js';
 import fieldRoutes from './field.routes.js';
@@ -35,6 +36,7 @@ const mainRoutes = [
   { path: '/rooms', router: roomRoutes },
   { path: '/classes', router: classRoutes },
   { path: '/sessions', router: sessionRoutes },
+  { path: '/attendances', router: attendanceRoutes },
 ];
 
 /**
