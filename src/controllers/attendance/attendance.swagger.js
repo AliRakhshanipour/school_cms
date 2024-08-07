@@ -189,3 +189,87 @@
  *                   type: string
  *                   example: "Attendance record not found"
  */
+
+/**
+ * @swagger
+ * /attendances/list:
+ *   get:
+ *     summary: Get attendance records with optional filters
+ *     tags: [Attendances]
+ *     parameters:
+ *       - in: query
+ *         name: first_name
+ *         schema:
+ *           type: string
+ *         description: Filter by student's first name
+ *       - in: query
+ *         name: last_name
+ *         schema:
+ *           type: string
+ *         description: Filter by student's last name
+ *       - in: query
+ *         name: national_code
+ *         schema:
+ *           type: string
+ *         description: Filter by student's national code
+ *       - in: query
+ *         name: roomId
+ *         schema:
+ *           type: integer
+ *         description: Filter by session's room ID
+ *     responses:
+ *       200:
+ *         description: List of attendance records
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 attendances:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       student:
+ *                         type: object
+ *                         properties:
+ *                           first_name:
+ *                             type: string
+ *                             example: John
+ *                           last_name:
+ *                             type: string
+ *                             example: Doe
+ *                           national_code:
+ *                             type: string
+ *                             example: 1234567890
+ *                       session:
+ *                         type: object
+ *                         properties:
+ *                           lesson:
+ *                             type: string
+ *                             example: Math
+ *                           roomId:
+ *                             type: integer
+ *                             example: 3
+ *                       class:
+ *                         type: object
+ *                         properties:
+ *                           number:
+ *                             type: string
+ *                             example: A1
+ *                       teacher:
+ *                         type: object
+ *                         properties:
+ *                           first_name:
+ *                             type: string
+ *                             example: Jane
+ *                           last_name:
+ *                             type: string
+ *                             example: Smith
+ *                           personal_code:
+ *                             type: string
+ *                             example: 9876543210
+ */

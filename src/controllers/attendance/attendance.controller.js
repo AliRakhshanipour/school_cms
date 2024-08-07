@@ -1,6 +1,7 @@
 import { request, response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import _ from 'lodash';
+import { Op } from 'sequelize';
 import { models } from '../../models/index.js';
 import BaseController from '../base.controller.js';
 import { AttendanceMsg } from './attendance.messages.js';
@@ -135,6 +136,71 @@ export const AttendanceController = (() => {
       }
     }
 
+    // TODO getAttendances
+    async getAttendances(req = request, res = response, next) {
+      try {
+        const { first_name, last_name, national_code, roomId } = req.query;
+
+        const whereClauses = {};
+
+        // Add filters for student attributes
+        if (first_name) {
+          whereClauses['$Student.first_name$'] = {
+            [Op.like]: `%${first_name}%`,
+          };
+        }
+        if (last_name) {
+          whereClauses['$Student.last_name$'] = { [Op.like]: `%${last_name}%` };
+        }
+        if (national_code) {
+          whereClauses['$Student.national_code$'] = {
+            [Op.like]: `%${national_code}%`,
+          };
+        }
+
+        // Add filter for session's roomId
+        if (roomId) {
+          whereClauses['$Session.roomId$'] = roomId;
+        }
+
+        const attendances = await this.#model.findAll({
+          where: whereClauses,
+          attributes: {
+            exclude: ['id', 'createdAt', 'updatedAt'],
+          },
+          include: [
+            {
+              model: this.#studentModel,
+              attributes: ['first_name', 'last_name', 'national_code'],
+              include: [
+                {
+                  model: this.#classModel,
+                  attributes: ['number'],
+                },
+              ],
+            },
+            {
+              model: this.#sessionModel,
+              attributes: ['lesson', 'roomId'],
+              include: [
+                {
+                  model: this.#teacherModel,
+                  attributes: ['first_name', 'last_name', 'personal_code'],
+                },
+              ],
+            },
+          ],
+        });
+
+        res.status(StatusCodes.OK).json({
+          success: true,
+          attendances,
+        });
+      } catch (error) {
+        next(error);
+      }
+    }
+
     // TODO updateAttendance
     async updateAttendance(req = request, res = response, next) {
       try {
@@ -145,14 +211,6 @@ export const AttendanceController = (() => {
 
     // TODO deleteAttendance
     async deleteAttendance(req = request, res = response, next) {
-      try {
-      } catch (error) {
-        next(error);
-      }
-    }
-
-    // TODO getAttendances
-    async getAttendances(req = request, res = response, next) {
       try {
       } catch (error) {
         next(error);

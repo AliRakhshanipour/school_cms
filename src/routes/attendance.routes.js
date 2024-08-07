@@ -24,7 +24,7 @@ const attendanceRoutes = [
   {
     method: 'get',
     path: '/list',
-    handler: [],
+    handler: [AttendanceController.getAttendances],
   },
   {
     method: 'get',
