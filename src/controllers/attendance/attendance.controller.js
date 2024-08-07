@@ -136,7 +136,6 @@ export const AttendanceController = (() => {
       }
     }
 
-    // TODO getAttendances
     async getAttendances(req = request, res = response, next) {
       try {
         const { first_name, last_name, national_code, roomId } = req.query;
@@ -204,6 +203,31 @@ export const AttendanceController = (() => {
     // TODO updateAttendance
     async updateAttendance(req = request, res = response, next) {
       try {
+        const { id: attendanceId } = req.params;
+        const updatedData = _.omitBy(
+          req.body,
+          (value) => _.isNil(value) || value === ''
+        );
+        if (!attendanceId) {
+          res.status(StatusCodes.BAD_REQUEST).json({
+            success: false,
+            message: AttendanceMsg.ATTENDANCE_ID_REQUIRED(),
+          });
+        }
+        const attendance =
+          (await this.#model.findByPk(attendanceId)) ||
+          res.status(StatusCodes.NOT_FOUND).json({
+            success: false,
+            message: AttendanceMsg.NOT_FOUND(attendanceId),
+          });
+
+        await attendance.update(updatedData);
+
+        res.status(StatusCodes.OK).json({
+          success: true,
+          message: AttendanceMsg.ATTENDANCE_UPDATED(attendanceId),
+          attendance,
+        });
       } catch (error) {
         next(error);
       }

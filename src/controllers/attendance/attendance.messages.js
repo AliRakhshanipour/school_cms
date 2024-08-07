@@ -8,4 +8,6 @@ export const AttendanceMsg = Object.freeze({
   NOT_FOUND: (attendanceId) =>
     `Attendance record not found with ID: ${attendanceId}`,
   ATTENDANCE_ID_REQUIRED: () => `Attendance ID is required`,
+  ATTENDANCE_UPDATED: (attendanceId) =>
+    `Attendance with ID :${attendanceId} updated successfully`,
 });

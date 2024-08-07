@@ -35,7 +35,7 @@ const attendanceRoutes = [
     method: 'patch',
     path: '/:id/update',
     middlewares: [],
-    handler: [],
+    handler: [AttendanceController.updateAttendance],
   },
   {
     method: 'delete',

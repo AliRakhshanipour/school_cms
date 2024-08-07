@@ -273,3 +273,94 @@
  *                             type: string
  *                             example: 9876543210
  */
+
+/**
+ * @swagger
+ * /attendances/{id}/update:
+ *   patch:
+ *     summary: Update an existing attendance record
+ *     tags: [Attendances]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the attendance record to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 enum: [present, delay, absent]
+ *                 example: present
+ *               delayMinutes:
+ *                 type: integer
+ *                 example: 15
+ *     responses:
+ *       200:
+ *         description: Attendance record updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Attendance record updated successfully
+ *                 attendance:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                       example: 1
+ *                     studentId:
+ *                       type: integer
+ *                       example: 1
+ *                     sessionId:
+ *                       type: integer
+ *                       example: 101
+ *                     status:
+ *                       type: string
+ *                       example: present
+ *                     date:
+ *                       type: string
+ *                       format: date
+ *                       example: 2023-08-01
+ *                     delayMinutes:
+ *                       type: integer
+ *                       example: 15
+ *       400:
+ *         description: Bad request due to missing or invalid data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Attendance ID is required
+ *       404:
+ *         description: Attendance record not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Attendance record not found
+ */
