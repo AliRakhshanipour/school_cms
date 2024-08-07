@@ -233,10 +233,46 @@ export const AttendanceController = (() => {
       }
     }
 
-    // TODO deleteAttendance
+    /**
+     * Delete an attendance record by ID.
+     *
+     * @param {Object} req - The request object.
+     * @param {Object} res - The response object.
+     * @param {Function} next - The next middleware function.
+     */
     async deleteAttendance(req = request, res = response, next) {
       try {
+        const { id: attendanceId } = req.params;
+
+        // Check if attendanceId is provided
+        if (!attendanceId) {
+          return res.status(StatusCodes.BAD_REQUEST).json({
+            success: false,
+            message: AttendanceMsg.ATTENDANCE_ID_REQUIRED(),
+          });
+        }
+
+        // Find the attendance by ID
+        const attendance = await this.#model.findByPk(attendanceId);
+
+        // Check if the attendance exists
+        if (!attendance) {
+          return res.status(StatusCodes.NOT_FOUND).json({
+            success: false,
+            message: AttendanceMsg.NOT_FOUND(attendanceId),
+          });
+        }
+
+        // Delete the attendance record
+        await attendance.destroy();
+
+        // Respond with success message
+        res.status(StatusCodes.OK).json({
+          success: true,
+          message: AttendanceMsg.ATTENDANCE_DELETED(attendanceId),
+        });
       } catch (error) {
+        // Pass any errors to the next middleware
         next(error);
       }
     }

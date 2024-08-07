@@ -10,4 +10,6 @@ export const AttendanceMsg = Object.freeze({
   ATTENDANCE_ID_REQUIRED: () => `Attendance ID is required`,
   ATTENDANCE_UPDATED: (attendanceId) =>
     `Attendance with ID :${attendanceId} updated successfully`,
+  ATTENDANCE_DELETED: (attendanceId) =>
+    `Attendance with ID :${attendanceId} deleted successfully`,
 });

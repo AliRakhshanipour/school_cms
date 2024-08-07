@@ -364,3 +364,58 @@
  *                   type: string
  *                   example: Attendance record not found
  */
+
+/**
+ * @swagger
+ * /attendances/{id}/delete:
+ *   delete:
+ *     summary: Delete an attendance record
+ *     tags: [Attendances]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the attendance record to delete
+ *     responses:
+ *       200:
+ *         description: Attendance record deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Attendance record deleted successfully
+ *       400:
+ *         description: Bad request due to missing or invalid attendance ID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Attendance ID is required
+ *       404:
+ *         description: Attendance record not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Attendance record not found
+ */

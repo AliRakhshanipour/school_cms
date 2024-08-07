@@ -41,7 +41,7 @@ const attendanceRoutes = [
     method: 'delete',
     path: '/:id/delete',
     middlewares: [],
-    handler: [],
+    handler: [AttendanceController.deleteAttendance],
   },
 ];
 
