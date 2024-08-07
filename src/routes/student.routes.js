@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { StudentController } from '../controllers/student/student.controller.js';
 import { AuthorizeMiddleware } from '../middlewares/auth/auth.middlewares.js';
 import { validateStudent } from '../middlewares/validations/student.validation.js';
+import { StudentService } from '../services/student/student.service.js';
 import profileUploader from '../utils/multer.js';
 import { registerRoutes } from '../utils/router-registrar.js';
 
@@ -46,6 +47,11 @@ const studentRoutes = [
     method: 'get',
     path: '/list',
     handler: [StudentController.getStudents],
+  },
+  {
+    method: 'get',
+    path: '/:id/attendances',
+    handler: [StudentService.getStudentAttendances],
   },
   {
     method: 'get',

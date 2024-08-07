@@ -413,6 +413,150 @@
 
 /**
  * @swagger
+ * /students/{id}/attendances:
+ *   get:
+ *     summary: Get attendances for a specific student with optional filters
+ *     tags: [Students]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the student
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [present, delay, absent]
+ *         description: Filter by attendance status
+ *       - in: query
+ *         name: startTime
+ *         schema:
+ *           type: string
+ *           format: HH:MM:SS
+ *         description: Filter by session start time
+ *       - in: query
+ *         name: endTime
+ *         schema:
+ *           type: string
+ *           format: HH:MM:SS
+ *         description: Filter by session end time
+ *       - in: query
+ *         name: day
+ *         schema:
+ *           type: string
+ *           enum: [Saturday, Sunday, Monday, Tuesday, Wednesday]
+ *         description: Filter by session day
+ *       - in: query
+ *         name: lesson
+ *         schema:
+ *           type: string
+ *         description: Filter by session lesson
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved attendances
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 attendances:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       status:
+ *                         type: string
+ *                         example: present
+ *                       date:
+ *                         type: string
+ *                         format: date
+ *                         example: 2023-08-07
+ *                       delayMinutes:
+ *                         type: integer
+ *                         example: 5
+ *                       student:
+ *                         type: object
+ *                         properties:
+ *                           first_name:
+ *                             type: string
+ *                             example: John
+ *                           last_name:
+ *                             type: string
+ *                             example: Doe
+ *                           national_code:
+ *                             type: string
+ *                             example: 123456789
+ *                           class:
+ *                             type: object
+ *                             properties:
+ *                               number:
+ *                                 type: string
+ *                                 example: 10-A
+ *                       session:
+ *                         type: object
+ *                         properties:
+ *                           lesson:
+ *                             type: string
+ *                             example: Math
+ *                           day:
+ *                             type: string
+ *                             example: Monday
+ *                           startTime:
+ *                             type: string
+ *                             example: 08:00:00
+ *                           endTime:
+ *                             type: string
+ *                             example: 09:30:00
+ *                           roomId:
+ *                             type: integer
+ *                             example: 101
+ *                           teacher:
+ *                             type: object
+ *                             properties:
+ *                               first_name:
+ *                                 type: string
+ *                                 example: Jane
+ *                               last_name:
+ *                                 type: string
+ *                                 example: Smith
+ *                               personal_code:
+ *                                 type: string
+ *                                 example: 987654321
+ *       400:
+ *         description: Bad request due to missing or invalid student ID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: Student ID is required
+ *       404:
+ *         description: No attendances found for the given student ID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: No attendances found for the given student ID
+ */
+
+/**
+ * @swagger
  * /students/{id}:
  *   get:
  *     summary: Retrieve a student by ID

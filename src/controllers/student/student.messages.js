@@ -11,4 +11,7 @@ export const StudentMsg = Object.freeze({
   NOT_CREATED: () => {
     return `student not created`;
   },
+  STUDENT_ID_REQUIRED: () => {
+    return `student ID is required`;
+  },
 });
